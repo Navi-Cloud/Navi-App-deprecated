@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion kotlin_version
+    compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
@@ -24,8 +24,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility kotlin_version
-        targetCompatibility kotlin_version
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
