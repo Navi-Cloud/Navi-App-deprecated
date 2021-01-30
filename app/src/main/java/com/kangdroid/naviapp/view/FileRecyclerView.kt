@@ -39,7 +39,7 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }
 
 class FileRecyclerAdapter(_items: MutableList<FileData> = mutableListOf<FileData>()) :
-        RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableCollection<FileData> by _items {
+        RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
     private var items: MutableList<FileData> = _items
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileRecyclerViewHolder {
