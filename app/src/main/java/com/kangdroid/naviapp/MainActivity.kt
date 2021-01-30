@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kangdroid.naviapp.view.FileData
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
+import com.kangdroid.naviapp.view.FileType
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,26 +25,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_add_file).setOnClickListener {
-            fileAdapter.items.add(
+            fileAdapter.add(
                 FileData(
-                    fileAdapter.items.size.toLong(),
-                    "file-name-${fileAdapter.items.size.toLong() + 1}",
-                    FileData.FILE_TYPE_FILE,
+                    fileAdapter.size.toLong(),
+                    "file-name-${fileAdapter.size.toLong() + 1}",
+                    FileType.FILE,
                     "TOKEN",
-                    "modified-time-${fileAdapter.items.size.toLong() + 1}"
+                    "modified-time-${fileAdapter.size.toLong() + 1}"
                 )
             )
             fileAdapter.notifyDataSetChanged()
         }
 
         findViewById<Button>(R.id.btn_add_folder).setOnClickListener {
-            fileAdapter.items.add(
+            fileAdapter.add(
                 FileData(
-                    fileAdapter.items.size.toLong(),
-                    "folder-name-${fileAdapter.items.size.toLong() + 1}/",
-                    FileData.FILE_TYPE_FOLDER,
+                    fileAdapter.size.toLong(),
+                    "folder-name-${fileAdapter.size.toLong() + 1}/",
+                    FileType.FOLDER,
                     "TOKEN",
-                    "modified-time-${fileAdapter.items.size.toLong() + 1}"
+                    "modified-time-${fileAdapter.size.toLong() + 1}"
                 )
             )
             fileAdapter.notifyDataSetChanged()
