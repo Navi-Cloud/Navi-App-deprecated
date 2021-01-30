@@ -8,17 +8,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kangdroid.naviapp.R
 
-class FileData(
-    var id: Long = 0,
-    var fileName: String,
-    var fileType: String,
-    var nextToken: String,
-    var lastModifiedTime: String,
-) {
-    companion object {
-        const val FILE_TYPE_FILE = "File"
-        const val FILE_TYPE_FOLDER = "Folder"
-    }
+data class FileData(
+        var id: Long = 0,
+        var fileName: String,
+        var fileType: FileType,
+        var nextToken: String,
+        var lastModifiedTime: String
+)
+
+enum class FileType {
+    FILE, FOLDER
 }
 
 class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,11 +28,10 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     fun bind(fileData: FileData) {
         imgFileType.setImageResource(
-            when (fileData.fileType) {
-                FileData.FILE_TYPE_FILE -> R.drawable.ic_common_file_24
-                FileData.FILE_TYPE_FOLDER -> R.drawable.ic_common_folder_24
-                else -> R.drawable.ic_common_error_24
-            }
+                when (fileData.fileType) {
+                    FileType.FILE -> R.drawable.ic_common_file_24
+                    FileType.FOLDER -> R.drawable.ic_common_folder_24
+                }
         )
         tvFileName.text = fileData.fileName
         tvLastModifiedTime.text = fileData.lastModifiedTime
