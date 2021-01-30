@@ -1,0 +1,27 @@
+name: BuildTest
+
+# Every push, we do build and testing process.
+on: push
+
+jobs:
+  BuildTest:
+    # Name the Job
+    name: Build the code, Test code using Gradlew
+
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Build Application/Test
+        run: ./gradlew --no-daemon --info build
