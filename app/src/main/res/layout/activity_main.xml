@@ -65,14 +65,14 @@
             android:paddingRight="8dp">
 
             <ToggleButton
-                android:id="@+id/tgb_name_lmd"
+                android:id="@+id/tgb_name_lmt"
                 style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:checked="false"
-                android:textOff="날짜순 정렬"
-                android:textOn="이름순 정렬" />
+                android:textOff="이름순 정렬"
+                android:textOn="날짜순 정렬" />
 
             <ToggleButton
                 android:id="@+id/tgb_acc_dec"
@@ -84,7 +84,7 @@
                 android:textOn="내림차순" />
 
             <ToggleButton
-                android:id="@+id/tgb_seperate_type"
+                android:id="@+id/tgb_shuffle_type"
                 style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
