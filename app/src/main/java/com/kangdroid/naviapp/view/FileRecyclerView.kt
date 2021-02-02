@@ -12,7 +12,7 @@ data class FileData(
         var id: Long = 0,
         var fileName: String,
         var fileType: FileType,
-        var nextToken: String,
+        var token: String,
         var lastModifiedTime: String
 )
 
