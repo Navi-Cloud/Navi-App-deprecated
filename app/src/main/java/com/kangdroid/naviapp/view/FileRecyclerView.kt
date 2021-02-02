@@ -7,13 +7,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kangdroid.naviapp.R
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.Date
 
 data class FileData(
-        var id: Long = 0,
-        var fileName: String,
-        var fileType: FileType,
-        var token: String,
-        var lastModifiedTime: String
+    var id: Long = 0,
+    var fileName: String,
+    var fileType: FileType,
+    var token: String,
+    var lastModifiedTime: Long
 )
 
 enum class FileType {
@@ -34,7 +37,10 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 }
         )
         tvFileName.text = fileData.fileName
-        tvLastModifiedTime.text = fileData.lastModifiedTime
+        tvLastModifiedTime.text = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSSSS",
+            Locale.getDefault()
+        ).format(Date(fileData.lastModifiedTime))
     }
 }
 
