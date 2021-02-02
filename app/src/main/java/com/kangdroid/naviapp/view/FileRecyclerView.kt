@@ -7,21 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kangdroid.naviapp.R
+import com.kangdroid.naviapp.custom.FileSortingMode
+import com.kangdroid.naviapp.custom.SortedFileList
+import com.kangdroid.naviapp.data.FileData
+import com.kangdroid.naviapp.data.FileType
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Date
-
-data class FileData(
-    var id: Long = 0,
-    var fileName: String,
-    var fileType: FileType,
-    var token: String,
-    var lastModifiedTime: Long
-)
-
-enum class FileType {
-    FOLDER, FILE
-}
 
 class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val imgFileType: ImageView = itemView.findViewById(R.id.img_file_type)
@@ -71,66 +63,3 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
         holder.bind(items[position])
 }
 
-class SortedFileList : ArrayList<FileData>() {
-    var comparator: FileSortingMode = FileSortingMode.TypedName
-        set(value) {
-            field = value
-            sort()
-        }
-
-    var reversed: Boolean = false
-        set(value) {
-            field = value
-            sort()
-        }
-
-    private fun sort() {
-        if (reversed) {
-            sortWith(comparator)
-            reverse()
-        } else {
-            sortWith(comparator)
-        }
-        println("sorted")
-    }
-
-    override fun add(element: FileData): Boolean {
-        var done: Boolean = false
-        for (i in indices) {
-            val compare = comparator.compare(this[i], element)
-            if (reversed) {
-                if (compare <= 0) {
-                    add(i, element)
-                    done = true
-                    break
-                } else {
-                    continue
-                }
-            } else if (compare >= 0) {
-                add(i, element)
-                done = true
-                break
-            } else {
-                continue
-            }
-        }
-        if (!done) {
-            done = super.add(element)
-        }
-        return done
-    }
-}
-
-sealed class FileSortingMode : Comparator<FileData> {
-    object TypedName : FileSortingMode(),
-        Comparator<FileData> by compareBy({ it.fileType }, { it.fileName }, { it.lastModifiedTime })
-
-    object TypedLMT : FileSortingMode(),
-        Comparator<FileData> by compareBy({ it.fileType }, { it.lastModifiedTime }, { it.fileName })
-
-    object Name : FileSortingMode(),
-        Comparator<FileData> by compareBy({ it.fileName }, { it.lastModifiedTime })
-
-    object LMT : FileSortingMode(),
-        Comparator<FileData> by compareBy({ it.lastModifiedTime }, { it.fileName })
-}
