@@ -44,9 +44,21 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     }
 }
 
-class FileRecyclerAdapter(_items: MutableList<FileData> = mutableListOf<FileData>()) :
-        RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
-    private var items: MutableList<FileData> = _items
+class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
+    RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
+    private var items: SortedFileList = _items
+
+    var reversed: Boolean
+        get() = items.reversed
+        set(value) {
+            items.reversed = value
+            notifyDataSetChanged()
+        }
+
+    fun setSortingMode(mode: FileSortingMode) {
+        items.comparator = mode
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileRecyclerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_file, parent, false)
