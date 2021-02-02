@@ -20,7 +20,7 @@ data class FileData(
 )
 
 enum class FileType {
-    FILE, FOLDER
+    FOLDER, FILE
 }
 
 class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
