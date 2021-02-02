@@ -8,10 +8,10 @@ import android.widget.EditText
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kangdroid.naviapp.view.FileData
+import com.kangdroid.naviapp.custom.FileSortingMode
+import com.kangdroid.naviapp.data.FileData
+import com.kangdroid.naviapp.data.FileType
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
-import com.kangdroid.naviapp.view.FileSortingMode
-import com.kangdroid.naviapp.view.FileType
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
