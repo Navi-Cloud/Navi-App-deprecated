@@ -1,6 +1,7 @@
 package com.kangdroid.naviapp.server
 
 import android.util.Log
+import com.kangdroid.naviapp.data.FileResponseDTO
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -8,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ServerManagement {
+    // Variable/Value Initiation Starts
     private val serverAddress: String = "192.168.0.46"
     private val serverPort: String = "8080"
     private val TAG_SERVER_MANAGEMENT = "ServerManagement"
@@ -23,10 +25,19 @@ object ServerManagement {
         null
     }
     private val api: APIInterface? = retroFit?.create(APIInterface::class.java) ?: run {
-        Log.e(TAG_SERVER_MANAGEMENT, "Server is NOT initiated, therefore api will not be implemented.")
+        Log.e(
+            TAG_SERVER_MANAGEMENT,
+            "Server is NOT initiated, therefore api will not be implemented."
+        )
         null
     }
+    // Variable/Value Initiation Ends
 
+    /**
+     * getRootToken: Get Root Token from Server
+     * Returns: A SHA-256 Root Token[as String] when server communication succeeds.
+     * Returns: Empty String when communication fails whatever reason is. [See logcat for verbose debugging]
+     */
     fun getRootToken(): String {
         val tokenFunction: Call<ResponseBody>? = api?.getRootToken()
         val response: Response<ResponseBody>? = try {
@@ -38,5 +49,25 @@ object ServerManagement {
         }
 
         return response?.body()?.string() ?: ""
+    }
+
+    /**
+     * getInsideFiles: Get list of files/directories based on requested token
+     * Param: The target token to request
+     * Returns: List of FileResponseDTO[The Response] - could be empty.
+     * Returns: NULL when error occurred.
+     * under requested token.
+     */
+    fun getInsideFiles(requestToken: String): List<FileResponseDTO>? {
+        val insiderFunction: Call<List<FileResponseDTO>>? = api?.getInsideFiles(requestToken)
+
+        val response: Response<List<FileResponseDTO>>? = try {
+            insiderFunction?.execute()
+        } catch (e: Exception) {
+            println(e.stackTraceToString())
+            null
+        }
+
+        return response?.body()
     }
 }
