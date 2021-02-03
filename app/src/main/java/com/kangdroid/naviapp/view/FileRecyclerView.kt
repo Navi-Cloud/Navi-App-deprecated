@@ -1,5 +1,6 @@
 package com.kangdroid.naviapp.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import com.kangdroid.naviapp.R
 import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.custom.SortedFileList
 import com.kangdroid.naviapp.data.FileData
+import com.kangdroid.naviapp.data.FileResponseDTO
 import com.kangdroid.naviapp.data.FileType
+import com.kangdroid.naviapp.server.ServerManagement
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
+import java.util.*
 
 class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val imgFileType: ImageView = itemView.findViewById(R.id.img_file_type)
@@ -38,6 +41,8 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
     RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
+    private val tokenStack: Stack<String> = Stack()
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
     private var items: SortedFileList = _items
 
     var reversed: Boolean
@@ -59,7 +64,46 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: FileRecyclerViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: FileRecyclerViewHolder, position: Int) {
+        holder.itemView.setOnClickListener { v ->
+            val testObject = items[holder.adapterPosition]
+            Log.e("TEST", "Touched: ${holder.adapterPosition}")
+            Log.e("TEST", "File Name: ${testObject.fileName}")
+            Log.e("TEST", "File Type: ${testObject.fileType}")
+            Log.e("TEST", "Token: ${testObject.token}")
+            Log.e("TEST", "Token: ${testObject.prevToken}")
+
+            if (testObject.fileType == FileType.FOLDER) {
+                tokenStack.push(testObject.prevToken)
+                clear()
+                notifyDataSetChanged()
+                requestDataWithToken(testObject.token)
+            }
+        }
         holder.bind(items[position])
+    }
+
+    fun backButtonPressed() {
+        // PrevToken
+        val prevToken: String = tokenStack.pop()
+        clear()
+        notifyDataSetChanged()
+        requestDataWithToken(prevToken)
+    }
+
+    private fun requestDataWithToken(inputToken: String) {
+        coroutineScope.launch {
+            val listRequest: List<FileResponseDTO> = ServerManagement.getInsideFiles(inputToken) ?: emptyList()
+
+            withContext(Dispatchers.Main) {
+                for (data in listRequest) {
+                    add(
+                        data.toFileData()
+                    )
+                }
+                notifyDataSetChanged()
+            }
+        }
+    }
 }
 

@@ -2,6 +2,7 @@ package com.kangdroid.naviapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -10,23 +11,33 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.data.FileData
+import com.kangdroid.naviapp.data.FileResponseDTO
 import com.kangdroid.naviapp.data.FileType
+import com.kangdroid.naviapp.server.ServerManagement
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
+    private val MAIN_UI: String = "MainActivity"
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
+
+    private val fileRV: RecyclerView by lazy {
+        findViewById<RecyclerView>(R.id.rv_test).apply {
+            layoutManager = LinearLayoutManager(applicationContext)
+        }
+    }
+
+    private val fileAdapter: FileRecyclerAdapter by lazy {
+        FileRecyclerAdapter().also { fileRV.adapter = it }
+    }
+
+    override fun onBackPressed() {
+        fileAdapter.backButtonPressed()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val fileRV: RecyclerView by lazy {
-            findViewById<RecyclerView>(R.id.rv_test).apply {
-                layoutManager = LinearLayoutManager(applicationContext)
-            }
-        }
-
-        val fileAdapter: FileRecyclerAdapter by lazy {
-            FileRecyclerAdapter().also { fileRV.adapter = it }
-        }
 
         val fileNameET: EditText = findViewById(R.id.et_file_name)
 
@@ -39,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                     fileNameET.text.toString(),
                     type,
                     "TEMP_TOKEN",
+                    "PREV_TOKEN",
                     System.currentTimeMillis()
                 )
             )
@@ -68,5 +80,35 @@ class MainActivity : AppCompatActivity() {
                 false -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.TypedLMT else FileSortingMode.TypedName)
             }
         }
+
+        coroutineScope.launch {
+            val response: List<FileResponseDTO> = initData()
+
+            withContext(Dispatchers.Main) {
+                for (data in response) {
+                    fileAdapter.add(
+                        data.toFileData()
+                    )
+                }
+                fileAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    /**
+     * A Blocking call could huge amount of times...
+     * Returns list of ROOT list
+     */
+    fun initData(): List<FileResponseDTO> {
+        val responseList: List<FileResponseDTO>
+
+        with(ServerManagement) {
+            responseList = getInsideFiles(getRootToken()) ?: run {
+                Log.e(MAIN_UI, "Error occurred when connecting to server.")
+                Log.e(MAIN_UI, "Returning empty list..")
+                emptyList()
+            }
+        }
+        return responseList
     }
 }
