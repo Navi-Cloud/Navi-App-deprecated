@@ -1,3 +1,13 @@
+/**
+ * ServerManagementTest: Server-Related basic test
+ * Author: KangDroid[Jason.HW.Kang]
+ * Warning: This will fail if server is NOT running on host machine for now.
+ * Any External CI/CD - Workflow will fail, unless we are integrating server
+ * itself when testing.
+ *
+ * TODO: Integrate RC Jar-Based Server under @Before annotation via Github Release Channel.
+ */
+
 package com.kangdroid.naviapp.server
 
 import org.assertj.core.api.Assertions.assertThat

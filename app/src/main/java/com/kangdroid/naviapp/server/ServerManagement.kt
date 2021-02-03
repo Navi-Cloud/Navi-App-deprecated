@@ -1,3 +1,8 @@
+/**
+ * ServerManagement: Server-Related Object Class
+ * Author: KangDroid[Jason.HW.Kang]
+ * Warning: This class should ONLY created once since building retrofit is huge-load-workload
+ */
 package com.kangdroid.naviapp.server
 
 import android.util.Log
@@ -56,7 +61,6 @@ object ServerManagement {
      * Param: The target token to request
      * Returns: List of FileResponseDTO[The Response] - could be empty.
      * Returns: NULL when error occurred.
-     * under requested token.
      */
     fun getInsideFiles(requestToken: String): List<FileResponseDTO>? {
         val insiderFunction: Call<List<FileResponseDTO>>? = api?.getInsideFiles(requestToken)
@@ -64,7 +68,8 @@ object ServerManagement {
         val response: Response<List<FileResponseDTO>>? = try {
             insiderFunction?.execute()
         } catch (e: Exception) {
-            println(e.stackTraceToString())
+            Log.e(TAG_SERVER_MANAGEMENT, "Error when getting directory list from server.")
+            Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
             null
         }
 
