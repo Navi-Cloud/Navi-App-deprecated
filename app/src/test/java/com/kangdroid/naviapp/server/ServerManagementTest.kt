@@ -29,4 +29,9 @@ class ServerManagementTest {
     fun isGettingRootTokenWorks() {
         assertThat(ServerManagement.getRootToken()).isNotEqualTo("")
     }
+
+    @Test
+    fun isGetInsideFilesWorks() {
+        assertThat(ServerManagement.getInsideFiles(ServerManagement.getRootToken())).isNotEqualTo(null)
+    }
 }
