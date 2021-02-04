@@ -6,7 +6,7 @@
 package com.kangdroid.naviapp.server
 
 import android.util.Log
-import com.kangdroid.naviapp.data.FileResponseDTO
+import com.kangdroid.naviapp.data.FileData
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -62,10 +62,10 @@ object ServerManagement {
      * Returns: List of FileResponseDTO[The Response] - could be empty.
      * Returns: NULL when error occurred.
      */
-    fun getInsideFiles(requestToken: String): List<FileResponseDTO>? {
-        val insiderFunction: Call<List<FileResponseDTO>>? = api?.getInsideFiles(requestToken)
+    fun getInsideFiles(requestToken: String): List<FileData>? {
+        val insiderFunction: Call<List<FileData>>? = api?.getInsideFiles(requestToken)
 
-        val response: Response<List<FileResponseDTO>>? = try {
+        val response: Response<List<FileData>>? = try {
             insiderFunction?.execute()
         } catch (e: Exception) {
             Log.e(TAG_SERVER_MANAGEMENT, "Error when getting directory list from server.")

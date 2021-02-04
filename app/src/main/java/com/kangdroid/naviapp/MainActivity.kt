@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.data.FileData
-import com.kangdroid.naviapp.data.FileResponseDTO
 import com.kangdroid.naviapp.data.FileType
 import com.kangdroid.naviapp.server.ServerManagement
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
 import kotlinx.coroutines.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private val MAIN_UI: String = "MainActivity"
@@ -50,19 +50,22 @@ class MainActivity : AppCompatActivity() {
                 return@OnClickListener
             fileAdapter.add(
                 FileData(
-                    fileAdapter.size.toLong(),
-                    fileNameET.text.toString(),
-                    type,
-                    "TEMP_TOKEN",
-                    "PREV_TOKEN",
-                    System.currentTimeMillis()
+                    id = fileAdapter.size.toLong(),
+                    fileName = fileNameET.text.toString(),
+                    fileType = type.toString(),
+                    mimeType = "",
+                    token = "TEMP_TOKEN",
+                    prevToken = "PREV_TOKEN",
+                    lastModifiedTime = System.currentTimeMillis(),
+                    fileCreatedDate = "FileCreatedDate",
+                    fileSize = "20B"
                 )
             )
             fileAdapter.notifyDataSetChanged()
         }
 
-        findViewById<Button>(R.id.btn_add_file).setOnClickListener(generateAddListener(FileType.FILE))
-        findViewById<Button>(R.id.btn_add_folder).setOnClickListener(generateAddListener(FileType.FOLDER))
+        findViewById<Button>(R.id.btn_add_file).setOnClickListener(generateAddListener(FileType.File))
+        findViewById<Button>(R.id.btn_add_folder).setOnClickListener(generateAddListener(FileType.Folder))
 
         findViewById<ToggleButton>(R.id.tgb_acc_dec).setOnCheckedChangeListener { _, isChecked ->
             fileAdapter.reversed = isChecked
@@ -87,13 +90,12 @@ class MainActivity : AppCompatActivity() {
 
         // Initiate Root Data
         coroutineScope.launch {
-            val response: List<FileResponseDTO> = initData()
+            val response: List<FileData> = initData()
 
             withContext(Dispatchers.Main) {
                 for (data in response) {
-                    fileAdapter.add(
-                        data.toFileData()
-                    )
+                    data.fileName = File(data.fileName).name
+                    fileAdapter.add(data)
                 }
                 fileAdapter.notifyDataSetChanged()
             }
@@ -104,8 +106,8 @@ class MainActivity : AppCompatActivity() {
      * A Blocking call could take huge amount of times...
      * Returns list of ROOT list
      */
-    private fun initData(): List<FileResponseDTO> {
-        val responseList: List<FileResponseDTO>
+    private fun initData(): List<FileData> {
+        val responseList: List<FileData>
 
         with(ServerManagement) {
             responseList = getInsideFiles(getRootToken()) ?: run {

@@ -11,10 +11,10 @@ import com.kangdroid.naviapp.R
 import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.custom.SortedFileList
 import com.kangdroid.naviapp.data.FileData
-import com.kangdroid.naviapp.data.FileResponseDTO
 import com.kangdroid.naviapp.data.FileType
 import com.kangdroid.naviapp.server.ServerManagement
 import kotlinx.coroutines.*
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,8 +27,9 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(fileData: FileData) {
         imgFileType.setImageResource(
             when (fileData.fileType) {
-                FileType.FILE -> R.drawable.ic_common_file_24
-                FileType.FOLDER -> R.drawable.ic_common_folder_24
+                FileType.File.toString() -> R.drawable.ic_common_file_24
+                FileType.Folder.toString() -> R.drawable.ic_common_folder_24
+                else -> R.drawable.ic_common_error_24
             }
         )
         tvFileName.text = fileData.fileName
@@ -68,7 +69,7 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
     override fun onBindViewHolder(holder: FileRecyclerViewHolder, position: Int) {
         holder.itemView.setOnClickListener { v ->
             val selectedObject = items[holder.adapterPosition]
-            if (selectedObject.fileType == FileType.FOLDER) {
+            if (selectedObject.fileType == FileType.Folder.toString()) {
                 tokenStack.push(selectedObject.prevToken)
 
                 // Clear object in list - but do not update view yet - since it could cause glitch-animation
@@ -89,7 +90,7 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
 
     private fun requestDataWithToken(inputToken: String) {
         coroutineScope.launch {
-            val listRequest: List<FileResponseDTO> =
+            val listRequest: List<FileData> =
                 ServerManagement.getInsideFiles(inputToken) ?: run {
                     Log.e(ADAPTER_TAG, "Error occurred when connecting to server.")
                     Log.e(ADAPTER_TAG, "Returning empty list..")
@@ -98,9 +99,8 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
 
             withContext(Dispatchers.Main) {
                 for (data in listRequest) {
-                    add(
-                        data.toFileData()
-                    )
+                    data.fileName = File(data.fileName).name
+                    add(data)
                 }
                 notifyDataSetChanged()
             }
