@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ServerManagement {
     // Variable/Value Initiation Starts
-    private val serverAddress: String = "192.168.0.46"
+    private val serverAddress: String = "localhost"
     private val serverPort: String = "8080"
     private val TAG_SERVER_MANAGEMENT = "ServerManagement"
     private val retroFit: Retrofit? = try {
