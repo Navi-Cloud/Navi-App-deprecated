@@ -67,11 +67,11 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
     override fun onBindViewHolder(holder: FileRecyclerViewHolder, position: Int) {
         holder.itemView.setOnClickListener { v ->
             val testObject = items[holder.adapterPosition]
-            Log.e("TEST", "Touched: ${holder.adapterPosition}")
-            Log.e("TEST", "File Name: ${testObject.fileName}")
-            Log.e("TEST", "File Type: ${testObject.fileType}")
-            Log.e("TEST", "Token: ${testObject.token}")
-            Log.e("TEST", "Token: ${testObject.prevToken}")
+            Log.i("TEST", "Touched: ${holder.adapterPosition}")
+            Log.i("TEST", "File Name: ${testObject.fileName}")
+            Log.i("TEST", "File Type: ${testObject.fileType}")
+            Log.i("TEST", "Token: ${testObject.token}")
+            Log.i("TEST", "Token: ${testObject.prevToken}")
 
             if (testObject.fileType == FileType.FOLDER) {
                 tokenStack.push(testObject.prevToken)
