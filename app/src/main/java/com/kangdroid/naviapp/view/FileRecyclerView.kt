@@ -75,8 +75,9 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
 
             if (testObject.fileType == FileType.FOLDER) {
                 tokenStack.push(testObject.prevToken)
+
+                // Clear object in list - but do not update view yet - since it could cause glitch-animation
                 clear()
-                notifyDataSetChanged()
                 requestDataWithToken(testObject.token)
             }
         }
