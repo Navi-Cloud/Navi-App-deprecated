@@ -67,7 +67,7 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: FileRecyclerViewHolder, position: Int) {
-        holder.itemView.setOnClickListener { v ->
+        holder.itemView.setOnClickListener { _ ->
             val selectedObject = items[holder.adapterPosition]
             if (selectedObject.fileType == FileType.Folder.toString()) {
                 tokenStack.push(selectedObject.prevToken)
