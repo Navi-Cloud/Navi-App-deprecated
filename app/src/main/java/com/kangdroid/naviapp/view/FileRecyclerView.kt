@@ -83,6 +83,10 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
         holder.bind(items[position])
     }
 
+    fun isStackEmpty(): Boolean {
+        return tokenStack.isEmpty()
+    }
+
     fun backButtonPressed() {
         // PrevToken
         val prevToken: String = tokenStack.pop()

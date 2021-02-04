@@ -32,7 +32,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        fileAdapter.backButtonPressed()
+        if (fileAdapter.isStackEmpty()) {
+            super.onBackPressed()
+        } else {
+            fileAdapter.backButtonPressed()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
