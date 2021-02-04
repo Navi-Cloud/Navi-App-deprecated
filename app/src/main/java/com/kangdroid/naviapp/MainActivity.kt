@@ -43,6 +43,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        ServerManagement.initServerCommunication("192.168.0.46", "8080")
+
         val fileNameET: EditText = findViewById(R.id.et_file_name)
 
         fun generateAddListener(type: FileType) = View.OnClickListener {

@@ -23,17 +23,5 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Setup Server
-        run: |
-          wget https://github.com/Navi-Cloud/Navi-Server/releases/download/v0.4.0-ALPHA/NavIServer-1.0-SNAPSHOT.jar -O /tmp/testServer.jar
-          mkdir -p /tmp/kdrTesting
-          cat << EOF > /tmp/application-test.properties
-          spring.jpa.show-sql=true
-          spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-          spring.h2.console.enabled=true
-          navi.server-root=/tmp/kdrTesting
-          EOF
-          java -jar /tmp/testServer.jar --spring.config.location=/tmp/application-test.properties &
-
       - name: Build Application/Test
         run: ./gradlew --no-daemon --info build
