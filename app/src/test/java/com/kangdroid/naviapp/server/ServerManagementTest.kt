@@ -42,6 +42,8 @@ class ServerManagementTest {
 
     @Test
     fun isGetInsideFilesWorks() {
-        assertThat(ServerManagement.getInsideFiles(ServerManagement.getRootToken())).isNotEqualTo(null)
+        assertThat(ServerManagement.getInsideFiles(ServerManagement.getRootToken())).isNotEqualTo(
+            null
+        )
     }
 }

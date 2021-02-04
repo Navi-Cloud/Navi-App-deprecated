@@ -41,6 +41,7 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
     RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
+    private val ADAPTER_TAG: String = "FileRecyclerAdapter"
     private val tokenStack: Stack<String> = Stack()
     private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
     private var items: SortedFileList = _items
@@ -66,39 +67,34 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
 
     override fun onBindViewHolder(holder: FileRecyclerViewHolder, position: Int) {
         holder.itemView.setOnClickListener { v ->
-            val testObject = items[holder.adapterPosition]
-            Log.i("TEST", "Touched: ${holder.adapterPosition}")
-            Log.i("TEST", "File Name: ${testObject.fileName}")
-            Log.i("TEST", "File Type: ${testObject.fileType}")
-            Log.i("TEST", "Token: ${testObject.token}")
-            Log.i("TEST", "Token: ${testObject.prevToken}")
-
-            if (testObject.fileType == FileType.FOLDER) {
-                tokenStack.push(testObject.prevToken)
+            val selectedObject = items[holder.adapterPosition]
+            if (selectedObject.fileType == FileType.FOLDER) {
+                tokenStack.push(selectedObject.prevToken)
 
                 // Clear object in list - but do not update view yet - since it could cause glitch-animation
                 clear()
-                requestDataWithToken(testObject.token)
+                requestDataWithToken(selectedObject.token)
             }
         }
         holder.bind(items[position])
     }
 
-    fun isStackEmpty(): Boolean {
-        return tokenStack.isEmpty()
-    }
+    fun isStackEmpty(): Boolean = tokenStack.isEmpty()
 
     fun backButtonPressed() {
-        // PrevToken
-        val prevToken: String = tokenStack.pop()
         clear()
         notifyDataSetChanged()
-        requestDataWithToken(prevToken)
+        requestDataWithToken(tokenStack.pop())
     }
 
     private fun requestDataWithToken(inputToken: String) {
         coroutineScope.launch {
-            val listRequest: List<FileResponseDTO> = ServerManagement.getInsideFiles(inputToken) ?: emptyList()
+            val listRequest: List<FileResponseDTO> =
+                ServerManagement.getInsideFiles(inputToken) ?: run {
+                    Log.e(ADAPTER_TAG, "Error occurred when connecting to server.")
+                    Log.e(ADAPTER_TAG, "Returning empty list..")
+                    emptyList()
+                }
 
             withContext(Dispatchers.Main) {
                 for (data in listRequest) {

@@ -1,12 +1,12 @@
 package com.kangdroid.naviapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ToggleButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kangdroid.naviapp.custom.FileSortingMode
@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Initiate Root Data
         coroutineScope.launch {
             val response: List<FileResponseDTO> = initData()
 
@@ -100,10 +101,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * A Blocking call could huge amount of times...
+     * A Blocking call could take huge amount of times...
      * Returns list of ROOT list
      */
-    fun initData(): List<FileResponseDTO> {
+    private fun initData(): List<FileResponseDTO> {
         val responseList: List<FileResponseDTO>
 
         with(ServerManagement) {
