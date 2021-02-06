@@ -1,6 +1,6 @@
 package com.kangdroid.naviapp.server
 
-import com.kangdroid.naviapp.data.FileResponseDTO
+import com.kangdroid.naviapp.data.FileData
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -11,5 +11,5 @@ interface APIInterface {
     fun getRootToken(): Call<ResponseBody>
 
     @GET("/api/navi/findInsideFiles/{token}")
-    fun getInsideFiles(@Path("token") token: String): Call<List<FileResponseDTO>>
+    fun getInsideFiles(@Path("token") token: String): Call<List<FileData>>
 }

@@ -24,8 +24,9 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(fileData: FileData) {
         imgFileType.setImageResource(
             when (fileData.fileType) {
-                FileType.FILE -> R.drawable.ic_common_file_24
-                FileType.FOLDER -> R.drawable.ic_common_folder_24
+                FileType.File.toString() -> R.drawable.ic_common_file_24
+                FileType.Folder.toString() -> R.drawable.ic_common_folder_24
+                else -> R.drawable.ic_common_error_24
             }
         )
         tvFileName.text = fileData.fileName
