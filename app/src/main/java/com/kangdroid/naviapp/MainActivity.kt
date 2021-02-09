@@ -52,21 +52,21 @@ class MainActivity : AppCompatActivity() {
             sortReverse = isChecked
         }
 
-        val shuffleTypeTGB: ToggleButton = findViewById(R.id.tgb_shuffle_type)
-        val sortByLMTTGB: ToggleButton = findViewById(R.id.tgb_name_lmt)
-
-        shuffleTypeTGB.setOnCheckedChangeListener { _, isChecked ->
-            when (sortByLMTTGB.isChecked) {
-                true -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.LMT else FileSortingMode.TypedLMT)
-                false -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.Name else FileSortingMode.TypedName)
-            }
-        }
-
-        sortByLMTTGB.setOnCheckedChangeListener { _, isChecked ->
-            when (shuffleTypeTGB.isChecked) {
-                true -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.LMT else FileSortingMode.Name)
-                false -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.TypedLMT else FileSortingMode.TypedName)
-            }
-        }
+//        val shuffleTypeTGB: ToggleButton = findViewById(R.id.tgb_shuffle_type)
+//        val sortByLMTTGB: ToggleButton = findViewById(R.id.tgb_name_lmt)
+//
+//        shuffleTypeTGB.setOnCheckedChangeListener { _, isChecked ->
+//            sortMode = when (sortByLMTTGB.isChecked) {
+//                true -> if (isChecked) FileSortingMode.LMT else FileSortingMode.TypedLMT
+//                false -> if (isChecked) FileSortingMode.Name else FileSortingMode.TypedName
+//            }
+//        }
+//
+//        sortByLMTTGB.setOnCheckedChangeListener { _, isChecked ->
+//            sortMode = when (shuffleTypeTGB.isChecked) {
+//                true -> if (isChecked) FileSortingMode.LMT else FileSortingMode.Name
+//                false -> if (isChecked) FileSortingMode.TypedLMT else FileSortingMode.TypedName
+//            }
+//        }
     }
 }
