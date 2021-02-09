@@ -71,8 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:checked="false"
-                android:textOff="이름순 정렬"
-                android:textOn="날짜순 정렬" />
+                android:textOff="@string/sort_name"
+                android:textOn="@string/sort_lmt" />
 
             <ToggleButton
                 android:id="@+id/tgb_acc_dec"
@@ -80,8 +80,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textOff="오름차순"
-                android:textOn="내림차순" />
+                android:textOff="@string/sort_ascending"
+                android:textOn="@string/sort_descending" />
 
             <ToggleButton
                 android:id="@+id/tgb_shuffle_type"
@@ -89,8 +89,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textOff="유형 구분"
-                android:textOn="유형 혼합" />
+                android:textOff="@string/sort_type"
+                android:textOn="@string/sort_type_not" />
 
         </LinearLayout>
 
