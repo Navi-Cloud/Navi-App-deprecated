@@ -31,7 +31,10 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
         tvLastModifiedTime.text = getFormattedDate(fileData)
 
         itemView.setOnClickListener {
-            pagerAdapter.explorePage(FileRecyclerAdapter(fileData, pagerAdapter))
+            when(fileData.fileType) {
+                FileType.FILE -> return@setOnClickListener // TODO should implement this too
+                FileType.FOLDER -> pagerAdapter.explorePage(FileRecyclerAdapter(fileData, pagerAdapter))
+            }
         }
     }
 }
