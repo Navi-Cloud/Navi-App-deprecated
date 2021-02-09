@@ -2,54 +2,54 @@ package com.kangdroid.naviapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ToggleButton
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.FileType
+import com.kangdroid.naviapp.data.getBriefName
+import com.kangdroid.naviapp.view.FilePagerAdapter
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
 
 class MainActivity : AppCompatActivity() {
+
+    private var sortReverse: Boolean = false
+    private lateinit var sortMode: FileSortingMode
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fileRV: RecyclerView by lazy {
-            findViewById<RecyclerView>(R.id.rv_test).apply {
-                layoutManager = LinearLayoutManager(applicationContext)
-            }
+        val pages: ViewPager2 = findViewById(R.id.vp_test)
+
+        val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pages).also {
+            pages.adapter = it
         }
 
-        val fileAdapter: FileRecyclerAdapter by lazy {
-            FileRecyclerAdapter().also { fileRV.adapter = it }
+        val fileRecyclerAdapter = FileRecyclerAdapter(
+            FileData(
+                0,
+                "root",
+                FileType.FOLDER,
+                "test-token",
+                System.currentTimeMillis()
+            ), pagerAdapter
+        ).apply {
+            pagerAdapter.addPage(this)
+            pagerAdapter.notifyDataSetChanged()
+            add(FileData(1, "TestDirectory", FileType.FOLDER, "test-token", System.currentTimeMillis()))
+            notifyDataSetChanged()
         }
 
-        val fileNameET: EditText = findViewById(R.id.et_file_name)
+        val tabs: TabLayout = findViewById(R.id.tl_test)
+        TabLayoutMediator(tabs, pages) { tab, position ->
+            tab.text = getBriefName(pagerAdapter.pages[position].folder)
+        }.attach()
 
-        fun generateAddListener(type: FileType) = View.OnClickListener {
-            if (fileNameET.text.isEmpty())
-                return@OnClickListener
-            fileAdapter.add(
-                FileData(
-                    fileAdapter.size.toLong(),
-                    fileNameET.text.toString(),
-                    type,
-                    "TEMP_TOKEN",
-                    System.currentTimeMillis()
-                )
-            )
-            fileAdapter.notifyDataSetChanged()
-        }
-
-        findViewById<Button>(R.id.btn_add_file).setOnClickListener(generateAddListener(FileType.FILE))
-        findViewById<Button>(R.id.btn_add_folder).setOnClickListener(generateAddListener(FileType.FOLDER))
-
-        findViewById<ToggleButton>(R.id.tgb_acc_dec).setOnCheckedChangeListener { _, isChecked ->
-            fileAdapter.reversed = isChecked
+        findViewById<ToggleButton>(R.id.tgb_asc_dsc).setOnCheckedChangeListener { _, isChecked ->
+            sortReverse = isChecked
         }
 
         val shuffleTypeTGB: ToggleButton = findViewById(R.id.tgb_shuffle_type)
