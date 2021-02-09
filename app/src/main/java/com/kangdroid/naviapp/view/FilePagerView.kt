@@ -41,8 +41,10 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
     }
 
     fun explorePage(page: FileRecyclerAdapter) {
-        insertPage(view.currentItem + 1, page)
-        notifyDataSetChanged()
+        if (pages.lastIndex <= view.currentItem || pages[view.currentItem + 1].folder.token != page.folder.token) {
+            insertPage(view.currentItem + 1, page)
+            notifyDataSetChanged()
+        }
         view.currentItem = view.currentItem + 1
     }
 
