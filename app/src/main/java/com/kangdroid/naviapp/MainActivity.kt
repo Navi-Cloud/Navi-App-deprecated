@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity() {
             sortReverse = isChecked
         }
 
+
+//        TODO should link these sorting buttons' events to proper FileRecyclerAdapter
+
 //        val shuffleTypeTGB: ToggleButton = findViewById(R.id.tgb_shuffle_type)
 //        val sortByLMTTGB: ToggleButton = findViewById(R.id.tgb_name_lmt)
 //
