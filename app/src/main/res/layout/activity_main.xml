@@ -8,93 +8,52 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabGravity="start"
+        app:tabMode="scrollable"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+        <ToggleButton
+            android:id="@+id/tgb_name_lmt"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal|center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:layout_weight="2"
+            android:checked="false"
+            android:minHeight="0dip"
+            android:textOff="@string/sort_name"
+            android:textOn="@string/sort_lmt" />
 
-            <EditText
-                android:id="@+id/et_file_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="file name" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/btn_add_file"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                app:icon="@drawable/ic_common_file_24" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/btn_add_folder"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                app:icon="@drawable/ic_common_folder_24" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ToggleButton
+            android:id="@+id/tgb_asc_dsc"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal|center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:layout_weight="1"
+            android:minHeight="0dip"
+            android:textOff="@string/sort_ascending"
+            android:textOn="@string/sort_descending" />
 
-            <ToggleButton
-                android:id="@+id/tgb_name_lmt"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:checked="false"
-                android:textOff="@string/sort_name"
-                android:textOn="@string/sort_lmt" />
+        <ToggleButton
+            android:id="@+id/tgb_shuffle_type"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="0dip"
+            android:textOff="@string/sort_type"
+            android:textOn="@string/sort_type_not" />
 
-            <ToggleButton
-                android:id="@+id/tgb_acc_dec"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textOff="@string/sort_ascending"
-                android:textOn="@string/sort_descending" />
-
-            <ToggleButton
-                android:id="@+id/tgb_shuffle_type"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textOff="@string/sort_type"
-                android:textOn="@string/sort_type_not" />
-
-        </LinearLayout>
+    </LinearLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_test"
