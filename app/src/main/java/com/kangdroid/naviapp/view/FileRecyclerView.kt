@@ -11,11 +11,10 @@ import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.custom.SortedFileList
 import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.FileType
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
+import com.kangdroid.naviapp.data.getBriefName
+import com.kangdroid.naviapp.data.getFormattedDate
 
-class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePagerAdapter) : RecyclerView.ViewHolder(itemView) {
     private val imgFileType: ImageView = itemView.findViewById(R.id.img_file_type)
     private val tvFileName: TextView = itemView.findViewById(R.id.tv_file_name)
     private val tvLastModifiedTime: TextView =
@@ -31,20 +30,13 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         tvFileName.text = getBriefName(fileData)
         tvLastModifiedTime.text = getFormattedDate(fileData)
 
-        tvFileName.text = fileData.fileName.let {
-            if (it.contains('/')) it.split('/').let { tokens -> tokens[tokens.size - 1] } else it
-        }.let {
-            if (fileData.fileType == FileType.FOLDER) "$it/" else it
+        itemView.setOnClickListener {
+            pagerAdapter.explorePage(FileRecyclerAdapter(fileData, pagerAdapter))
         }
-
-        tvLastModifiedTime.text = SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss.SSSSS",
-            Locale.getDefault()
-        ).format(Date(fileData.lastModifiedTime))
     }
 }
 
-class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
+class FileRecyclerAdapter(val folder: FileData, private val pagerAdapter: FilePagerAdapter, _items: SortedFileList = SortedFileList()) :
     RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
     private var items: SortedFileList = _items
 
@@ -62,7 +54,7 @@ class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileRecyclerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_file, parent, false)
-        return FileRecyclerViewHolder(view)
+        return FileRecyclerViewHolder(view, pagerAdapter)
     }
 
     override fun getItemCount(): Int = items.size
