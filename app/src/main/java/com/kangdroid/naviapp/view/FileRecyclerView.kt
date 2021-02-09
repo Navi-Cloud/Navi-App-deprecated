@@ -28,7 +28,13 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 FileType.FOLDER -> R.drawable.ic_common_folder_24
             }
         )
-        tvFileName.text = fileData.fileName
+
+        tvFileName.text = fileData.fileName.let {
+            if (it.contains('/')) it.split('/').let { tokens -> tokens[tokens.size - 1] } else it
+        }.let {
+            if (fileData.fileType == FileType.FOLDER) "$it/" else it
+        }
+
         tvLastModifiedTime.text = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSSSS",
             Locale.getDefault()
