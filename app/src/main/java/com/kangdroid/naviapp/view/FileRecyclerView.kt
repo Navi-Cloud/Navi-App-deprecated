@@ -28,6 +28,8 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 FileType.FOLDER -> R.drawable.ic_common_folder_24
             }
         )
+        tvFileName.text = getBriefName(fileData)
+        tvLastModifiedTime.text = getFormattedDate(fileData)
 
         tvFileName.text = fileData.fileName.let {
             if (it.contains('/')) it.split('/').let { tokens -> tokens[tokens.size - 1] } else it
