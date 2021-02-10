@@ -34,8 +34,10 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
     }
 
     fun addPage(page: FileRecyclerAdapter) {
-        cachePage(page)
         pages.add(page)
+        if (!cachedPages.containsKey(page.folder.token)) {
+            cachePage(page)
+        }
     }
 
     fun insertPage(position: Int, page: FileRecyclerAdapter) {
@@ -55,6 +57,8 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
             notifyDataSetChanged()
         }
         view.currentItem = view.currentItem + 1
+        println(cachedPages)
+        println(pages)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilePagerViewHolder {
