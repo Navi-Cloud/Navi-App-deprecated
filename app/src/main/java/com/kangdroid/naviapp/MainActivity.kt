@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             pagerAdapter.addPage(this)
             pagerAdapter.notifyDataSetChanged()
-            add(FileData(1, "TestDirectory", FileType.FOLDER, "test-token", System.currentTimeMillis()))
+            add(FileData(1, "TestDirectory1", FileType.FOLDER, "test-token1", System.currentTimeMillis()))
+            add(FileData(2, "TestDirectory2", FileType.FOLDER, "test-token2", System.currentTimeMillis()))
             notifyDataSetChanged()
         }
 

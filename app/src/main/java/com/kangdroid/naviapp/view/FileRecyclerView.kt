@@ -33,7 +33,7 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
         itemView.setOnClickListener {
             when(fileData.fileType) {
                 FileType.FILE -> return@setOnClickListener // TODO should implement this too
-                FileType.FOLDER -> pagerAdapter.explorePage(FileRecyclerAdapter(fileData, pagerAdapter))
+                FileType.FOLDER -> pagerAdapter.exploreFolder(fileData)
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.kangdroid.naviapp.R
+import com.kangdroid.naviapp.data.FileData
 
 class FilePagerViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
@@ -28,8 +29,12 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
         // TODO should use method of FileRecyclerAdapter to update with fresh data
     }
 
-    fun addPage(page: FileRecyclerAdapter) {
+    fun cachePage(page: FileRecyclerAdapter) {
         cachedPages[page.folder.token] = page
+    }
+
+    fun addPage(page: FileRecyclerAdapter) {
+        cachePage(page)
         pages.add(page)
     }
 
@@ -40,8 +45,12 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
         addPage(page)
     }
 
-    fun explorePage(page: FileRecyclerAdapter) {
-        if (pages.lastIndex <= view.currentItem || pages[view.currentItem + 1].folder.token != page.folder.token) {
+    fun exploreFolder(fileData: FileData) {
+        val page: FileRecyclerAdapter = cachedPages[fileData.token] ?: FileRecyclerAdapter(
+            fileData,
+            this
+        ).also { cachePage(it) }
+        if (pages.lastIndex <= view.currentItem || pages[view.currentItem + 1].folder.token != fileData.token) {
             insertPage(view.currentItem + 1, page)
             notifyDataSetChanged()
         }
