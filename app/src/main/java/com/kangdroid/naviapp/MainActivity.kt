@@ -18,14 +18,16 @@ class MainActivity : AppCompatActivity() {
     private var sortReverse: Boolean = false
     private lateinit var sortMode: FileSortingMode
 
+    private lateinit var pagesVP: ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val pages: ViewPager2 = findViewById(R.id.vp_test)
+        pagesVP = findViewById(R.id.vp_test)
 
-        val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pages).also {
-            pages.adapter = it
+        val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pagesVP).also {
+            pagesVP.adapter = it
         }
 
         val fileRecyclerAdapter = FileRecyclerAdapter(
@@ -39,13 +41,29 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             pagerAdapter.addPage(this)
             pagerAdapter.notifyDataSetChanged()
-            add(FileData(1, "TestDirectory1", FileType.FOLDER, "test-token1", System.currentTimeMillis()))
-            add(FileData(2, "TestDirectory2", FileType.FOLDER, "test-token2", System.currentTimeMillis()))
+            add(
+                FileData(
+                    1,
+                    "TestDirectory1",
+                    FileType.FOLDER,
+                    "test-token1",
+                    System.currentTimeMillis()
+                )
+            )
+            add(
+                FileData(
+                    2,
+                    "TestDirectory2",
+                    FileType.FOLDER,
+                    "test-token2",
+                    System.currentTimeMillis()
+                )
+            )
             notifyDataSetChanged()
         }
 
         val tabs: TabLayout = findViewById(R.id.tl_test)
-        TabLayoutMediator(tabs, pages) { tab, position ->
+        TabLayoutMediator(tabs, pagesVP) { tab, position ->
             tab.text = getBriefName(pagerAdapter.pages[position].folder)
         }.attach()
 
@@ -72,5 +90,13 @@ class MainActivity : AppCompatActivity() {
 //                false -> if (isChecked) FileSortingMode.TypedLMT else FileSortingMode.TypedName
 //            }
 //        }
+    }
+
+    override fun onBackPressed() {
+        if (pagesVP.currentItem > 0) {
+            pagesVP.currentItem -= 1
+        } else {
+            super.onBackPressed()
+        }
     }
 }
