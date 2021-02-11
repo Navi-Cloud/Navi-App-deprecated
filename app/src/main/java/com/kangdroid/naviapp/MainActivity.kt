@@ -2,6 +2,7 @@ package com.kangdroid.naviapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.CompoundButton
 import android.widget.ToggleButton
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -14,10 +15,6 @@ import com.kangdroid.naviapp.view.FilePagerAdapter
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
 
 class MainActivity : AppCompatActivity() {
-
-    private var sortReverse: Boolean = false
-    private lateinit var sortMode: FileSortingMode
-
     private lateinit var pagesVP: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             pagesVP.adapter = it
         }
 
-        val fileRecyclerAdapter = FileRecyclerAdapter(
+        FileRecyclerAdapter(
             FileData(
                 0,
                 "root",
