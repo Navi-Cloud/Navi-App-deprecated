@@ -11,11 +11,11 @@ import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.custom.SortedFileList
 import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.FileType
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
+import com.kangdroid.naviapp.data.getBriefName
+import com.kangdroid.naviapp.data.getFormattedDate
 
-class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePagerAdapter) :
+    RecyclerView.ViewHolder(itemView) {
     private val imgFileType: ImageView = itemView.findViewById(R.id.img_file_type)
     private val tvFileName: TextView = itemView.findViewById(R.id.tv_file_name)
     private val tvLastModifiedTime: TextView =
@@ -28,33 +28,44 @@ class FileRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 FileType.FOLDER -> R.drawable.ic_common_folder_24
             }
         )
-        tvFileName.text = fileData.fileName
-        tvLastModifiedTime.text = SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss.SSSSS",
-            Locale.getDefault()
-        ).format(Date(fileData.lastModifiedTime))
+        tvFileName.text = getBriefName(fileData)
+        tvLastModifiedTime.text = getFormattedDate(fileData)
+
+        itemView.setOnClickListener {
+            when (fileData.fileType) {
+                FileType.FILE -> return@setOnClickListener // TODO should implement this too
+                FileType.FOLDER -> pagerAdapter.exploreFolder(fileData)
+            }
+        }
     }
 }
 
-class FileRecyclerAdapter(_items: SortedFileList = SortedFileList()) :
+class FileRecyclerAdapter(
+    val folder: FileData,
+    private val pagerAdapter: FilePagerAdapter,
+    _items: SortedFileList = SortedFileList()
+) :
     RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
     private var items: SortedFileList = _items
 
-    var reversed: Boolean
-        get() = items.reversed
-        set(value) {
-            items.reversed = value
+    fun sort(mode: FileSortingMode, reverse: Boolean) {
+        var isChanged: Boolean = false
+        if (items.comparator != mode) {
+            items.comparator = mode
+            isChanged = true
+        }
+        if (items.isReversed != reverse) {
+            items.isReversed = reverse
+            isChanged = true
+        }
+        if (isChanged){
             notifyDataSetChanged()
         }
-
-    fun setSortingMode(mode: FileSortingMode) {
-        items.comparator = mode
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileRecyclerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_file, parent, false)
-        return FileRecyclerViewHolder(view)
+        return FileRecyclerViewHolder(view, pagerAdapter)
     }
 
     override fun getItemCount(): Int = items.size

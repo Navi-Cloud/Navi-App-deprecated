@@ -2,71 +2,91 @@ package com.kangdroid.naviapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
+import android.widget.CompoundButton
 import android.widget.ToggleButton
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.FileType
+import com.kangdroid.naviapp.data.getBriefName
+import com.kangdroid.naviapp.view.FilePagerAdapter
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var pagesVP: ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fileRV: RecyclerView by lazy {
-            findViewById<RecyclerView>(R.id.rv_test).apply {
-                layoutManager = LinearLayoutManager(applicationContext)
-            }
+        pagesVP = findViewById(R.id.vp_test)
+
+        val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pagesVP).also {
+            pagesVP.adapter = it
         }
 
-        val fileAdapter: FileRecyclerAdapter by lazy {
-            FileRecyclerAdapter().also { fileRV.adapter = it }
-        }
-
-        val fileNameET: EditText = findViewById(R.id.et_file_name)
-
-        fun generateAddListener(type: FileType) = View.OnClickListener {
-            if (fileNameET.text.isEmpty())
-                return@OnClickListener
-            fileAdapter.add(
+        FileRecyclerAdapter(
+            FileData(
+                0,
+                "root",
+                FileType.FOLDER,
+                "test-token",
+                System.currentTimeMillis()
+            ), pagerAdapter
+        ).apply {
+            pagerAdapter.addPage(this)
+            pagerAdapter.notifyDataSetChanged()
+            add(
                 FileData(
-                    fileAdapter.size.toLong(),
-                    fileNameET.text.toString(),
-                    type,
-                    "TEMP_TOKEN",
+                    1,
+                    "TestDirectory1",
+                    FileType.FOLDER,
+                    "test-token1",
                     System.currentTimeMillis()
                 )
             )
-            fileAdapter.notifyDataSetChanged()
+            add(
+                FileData(
+                    2,
+                    "TestDirectory2",
+                    FileType.FOLDER,
+                    "test-token2",
+                    System.currentTimeMillis()
+                )
+            )
+            notifyDataSetChanged()
         }
 
-        findViewById<Button>(R.id.btn_add_file).setOnClickListener(generateAddListener(FileType.FILE))
-        findViewById<Button>(R.id.btn_add_folder).setOnClickListener(generateAddListener(FileType.FOLDER))
-
-        findViewById<ToggleButton>(R.id.tgb_acc_dec).setOnCheckedChangeListener { _, isChecked ->
-            fileAdapter.reversed = isChecked
-        }
+        val tabs: TabLayout = findViewById(R.id.tl_test)
+        TabLayoutMediator(tabs, pagesVP) { tab, position ->
+            tab.text = getBriefName(pagerAdapter.pages[position].folder)
+        }.attach()
 
         val shuffleTypeTGB: ToggleButton = findViewById(R.id.tgb_shuffle_type)
         val sortByLMTTGB: ToggleButton = findViewById(R.id.tgb_name_lmt)
+        val reverseTGB: ToggleButton = findViewById(R.id.tgb_asc_dsc)
 
-        shuffleTypeTGB.setOnCheckedChangeListener { _, isChecked ->
-            when (sortByLMTTGB.isChecked) {
-                true -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.LMT else FileSortingMode.TypedLMT)
-                false -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.Name else FileSortingMode.TypedName)
-            }
+        val sortListener: (CompoundButton, Boolean) -> Unit = { _, _ ->
+            pagerAdapter.sort(
+                when (sortByLMTTGB.isChecked) {
+                    true -> if (shuffleTypeTGB.isChecked) FileSortingMode.LMT else FileSortingMode.TypedLMT
+                    false -> if (shuffleTypeTGB.isChecked) FileSortingMode.Name else FileSortingMode.TypedName
+                }, reverseTGB.isChecked
+            )
         }
 
-        sortByLMTTGB.setOnCheckedChangeListener { _, isChecked ->
-            when (shuffleTypeTGB.isChecked) {
-                true -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.LMT else FileSortingMode.Name)
-                false -> fileAdapter.setSortingMode(if (isChecked) FileSortingMode.TypedLMT else FileSortingMode.TypedName)
-            }
+        shuffleTypeTGB.setOnCheckedChangeListener(sortListener)
+        sortByLMTTGB.setOnCheckedChangeListener(sortListener)
+        reverseTGB.setOnCheckedChangeListener(sortListener)
+    }
+
+    override fun onBackPressed() {
+        if (pagesVP.currentItem > 0) {
+            pagesVP.currentItem -= 1
+        } else {
+            super.onBackPressed()
         }
     }
 }
