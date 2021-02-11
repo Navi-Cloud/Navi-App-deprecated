@@ -9,14 +9,14 @@ class SortedFileList : ArrayList<FileData>() {
             sort()
         }
 
-    var reversed: Boolean = false
+    var isReversed: Boolean = false
         set(value) {
             field = value
             sort()
         }
 
     private fun sort() {
-        if (reversed) {
+        if (isReversed) {
             sortWith(comparator)
             reverse()
         } else {
@@ -29,7 +29,7 @@ class SortedFileList : ArrayList<FileData>() {
         var done: Boolean = false
         for (i in indices) {
             val compare = comparator.compare(this[i], element)
-            if (reversed) {
+            if (isReversed) {
                 if (compare <= 0) {
                     add(i, element)
                     done = true

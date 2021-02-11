@@ -14,7 +14,8 @@ import com.kangdroid.naviapp.data.FileType
 import com.kangdroid.naviapp.data.getBriefName
 import com.kangdroid.naviapp.data.getFormattedDate
 
-class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePagerAdapter) : RecyclerView.ViewHolder(itemView) {
+class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePagerAdapter) :
+    RecyclerView.ViewHolder(itemView) {
     private val imgFileType: ImageView = itemView.findViewById(R.id.img_file_type)
     private val tvFileName: TextView = itemView.findViewById(R.id.tv_file_name)
     private val tvLastModifiedTime: TextView =
@@ -31,7 +32,7 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
         tvLastModifiedTime.text = getFormattedDate(fileData)
 
         itemView.setOnClickListener {
-            when(fileData.fileType) {
+            when (fileData.fileType) {
                 FileType.FILE -> return@setOnClickListener // TODO should implement this too
                 FileType.FOLDER -> pagerAdapter.exploreFolder(fileData)
             }
@@ -39,7 +40,11 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
     }
 }
 
-class FileRecyclerAdapter(val folder: FileData, private val pagerAdapter: FilePagerAdapter, _items: SortedFileList = SortedFileList()) :
+class FileRecyclerAdapter(
+    val folder: FileData,
+    private val pagerAdapter: FilePagerAdapter,
+    _items: SortedFileList = SortedFileList()
+) :
     RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
     private var items: SortedFileList = _items
 
