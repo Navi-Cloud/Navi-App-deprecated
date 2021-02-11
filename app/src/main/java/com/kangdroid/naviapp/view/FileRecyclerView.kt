@@ -30,8 +30,9 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
     fun bind(fileData: FileData) {
         imgFileType.setImageResource(
             when (fileData.fileType) {
-                FileType.FILE -> R.drawable.ic_common_file_24
-                FileType.FOLDER -> R.drawable.ic_common_folder_24
+                FileType.File.toString() -> R.drawable.ic_common_file_24
+                FileType.Folder.toString() -> R.drawable.ic_common_folder_24
+                else -> R.drawable.ic_common_error_24
             }
         )
         tvFileName.text = getBriefName(fileData)
@@ -39,8 +40,8 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
 
         itemView.setOnClickListener {
             when (fileData.fileType) {
-                FileType.FILE -> return@setOnClickListener // TODO should implement this too
-                FileType.FOLDER -> pagerAdapter.exploreFolder(fileData)
+                FileType.File.toString() -> return@setOnClickListener // TODO should implement this too
+                FileType.Folder.toString() -> pagerAdapter.exploreFolder(fileData)
             }
         }
     }

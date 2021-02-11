@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!ServerManagement.initServerCommunication("172.30.1.7", "8080")) {
+        if (!ServerManagement.initServerCommunication("192.168.0.46", "8080")) {
             Log.wtf("MainActivity", "Server initiation failed!")
             Log.wtf("MainActivity", "This should NOT be happened!")
         }
@@ -39,37 +39,6 @@ class MainActivity : AppCompatActivity() {
             pagesVP.adapter = it
         }
 
-        FileRecyclerAdapter(
-            FileData(
-                0,
-                "root",
-                FileType.FOLDER,
-                "test-token",
-                System.currentTimeMillis()
-            ), pagerAdapter
-        ).apply {
-            pagerAdapter.addPage(this)
-            pagerAdapter.notifyDataSetChanged()
-/*            add(
-                FileData(
-                    1,
-                    "TestDirectory1",
-                    FileType.FOLDER,
-                    "test-token1",
-                    System.currentTimeMillis()
-                )
-            )
-            add(
-                FileData(
-                    2,
-                    "TestDirectory2",
-                    FileType.FOLDER,
-                    "test-token2",
-                    System.currentTimeMillis()
-                )
-            )
-            notifyDataSetChanged()*/
-        }
 
         val tabs: TabLayout = findViewById(R.id.tl_test)
         TabLayoutMediator(tabs, pagesVP) { tab, position ->
@@ -96,20 +65,22 @@ class MainActivity : AppCompatActivity() {
         coroutineScope.launch {
             val response: List<FileData> = initData()
             withContext(Dispatchers.Main) {
-                for (data in response) {
-                    data.fileName = File(data.fileName).name
-                    FileRecyclerAdapter(
-                        FileData(
-                            0,
-                            "root",
-                            FileType.FOLDER,
-                            "test-token",
-                            System.currentTimeMillis()
-                        ), pagerAdapter
-                    ).apply{
-                        (data)
-                        notifyDataSetChanged()
+                FileRecyclerAdapter(
+                    FileData(
+                        0,
+                        "root",
+                        FileType.Folder.toString(),
+                        "test-token",
+                        System.currentTimeMillis()
+                    ), pagerAdapter
+                ).apply{
+                    pagerAdapter.addPage(this)
+                    pagerAdapter.notifyDataSetChanged()
+                    for (data in response) {
+                        data.fileName = File(data.fileName).name
+                        add(data)
                     }
+                    notifyDataSetChanged()
                 }
             }
         }
