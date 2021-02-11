@@ -1,5 +1,6 @@
 package com.kangdroid.naviapp.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,9 @@ import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.FileType
 import com.kangdroid.naviapp.data.getBriefName
 import com.kangdroid.naviapp.data.getFormattedDate
+import com.kangdroid.naviapp.server.ServerManagement
+import kotlinx.coroutines.*
+import java.io.File
 
 class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePagerAdapter) :
     RecyclerView.ViewHolder(itemView) {
@@ -20,6 +24,8 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
     private val tvFileName: TextView = itemView.findViewById(R.id.tv_file_name)
     private val tvLastModifiedTime: TextView =
         itemView.findViewById(R.id.tv_last_modified_time)
+    private val ADAPTER_TAG: String = "FileRecyclerAdapter"
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
     fun bind(fileData: FileData) {
         imgFileType.setImageResource(
@@ -38,6 +44,24 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
             }
         }
     }
+
+/*    private fun requestDataWithToken(inputToken: String) {
+        coroutineScope.launch {
+            val listRequest: List<FileData> =
+                ServerManagement.getInsideFiles(inputToken) ?: run {
+                    Log.e(ADAPTER_TAG, "Error occurred when connecting to server.")
+                    Log.e(ADAPTER_TAG, "Returning empty list..")
+                    emptyList<FileData>()
+                }
+                withContext(Dispatchers.Main) {
+                    for (data in listRequest) {
+                        data.fileName = File(data.fileName).name
+                        add(data)
+                    }
+                    notifyDataSetChanged()
+                }
+            }
+        }*/
 }
 
 class FileRecyclerAdapter(

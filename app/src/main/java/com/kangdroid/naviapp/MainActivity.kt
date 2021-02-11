@@ -1,7 +1,9 @@
 package com.kangdroid.naviapp
 
+import android.graphics.Insets.add
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.CompoundButton
 import android.widget.ToggleButton
 import androidx.viewpager2.widget.ViewPager2
@@ -11,17 +13,27 @@ import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.FileType
 import com.kangdroid.naviapp.data.getBriefName
+import com.kangdroid.naviapp.server.ServerManagement
 import com.kangdroid.naviapp.view.FilePagerAdapter
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
+import kotlinx.coroutines.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var pagesVP: ViewPager2
+    private val MAIN_UI: String = "MainActivity"
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        if (!ServerManagement.initServerCommunication("172.30.1.7", "8080")) {
+            Log.wtf("MainActivity", "Server initiation failed!")
+            Log.wtf("MainActivity", "This should NOT be happened!")
+        }
 
         pagesVP = findViewById(R.id.vp_test)
+
 
         val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pagesVP).also {
             pagesVP.adapter = it
@@ -38,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             pagerAdapter.addPage(this)
             pagerAdapter.notifyDataSetChanged()
-            add(
+/*            add(
                 FileData(
                     1,
                     "TestDirectory1",
@@ -56,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     System.currentTimeMillis()
                 )
             )
-            notifyDataSetChanged()
+            notifyDataSetChanged()*/
         }
 
         val tabs: TabLayout = findViewById(R.id.tl_test)
@@ -80,6 +92,27 @@ class MainActivity : AppCompatActivity() {
         shuffleTypeTGB.setOnCheckedChangeListener(sortListener)
         sortByLMTTGB.setOnCheckedChangeListener(sortListener)
         reverseTGB.setOnCheckedChangeListener(sortListener)
+
+        coroutineScope.launch {
+            val response: List<FileData> = initData()
+            withContext(Dispatchers.Main) {
+                for (data in response) {
+                    data.fileName = File(data.fileName).name
+                    FileRecyclerAdapter(
+                        FileData(
+                            0,
+                            "root",
+                            FileType.FOLDER,
+                            "test-token",
+                            System.currentTimeMillis()
+                        ), pagerAdapter
+                    ).apply{
+                        (data)
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -88,5 +121,17 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+    private fun initData(): List<FileData> {
+        val responseList: List<FileData>
+
+        with(ServerManagement) {
+            responseList = getInsideFiles(getRootToken()) ?: run {
+                Log.e(MAIN_UI, "Error occurred when connecting to server.")
+                Log.e(MAIN_UI, "Returning empty list..")
+                emptyList<FileData>()
+            }
+        }
+        return responseList
     }
 }
