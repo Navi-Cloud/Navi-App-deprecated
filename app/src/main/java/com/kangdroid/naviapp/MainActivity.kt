@@ -1,6 +1,5 @@
 package com.kangdroid.naviapp
 
-import android.graphics.Insets.add
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!ServerManagement.initServerCommunication("192.168.0.46", "8080")) {
+        if (!ServerManagement.initServerCommunication("172.30.1.7", "8080")) {
             Log.wtf("MainActivity", "Server initiation failed!")
             Log.wtf("MainActivity", "This should NOT be happened!")
         }
@@ -76,8 +75,9 @@ class MainActivity : AppCompatActivity() {
                 ).apply{
                     pagerAdapter.addPage(this)
                     pagerAdapter.notifyDataSetChanged()
-                    for (data in response) {
-                        data.fileName = File(data.fileName).name
+                    for (data in response){
+                        data.fileName = testString(File(data.fileName).name)
+                        Log.e("TESTING", "${File(data.fileName).isAbsolute}")
                         add(data)
                     }
                     notifyDataSetChanged()
@@ -104,5 +104,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return responseList
+    }
+
+    fun testString(input: String): String {
+        var retString: String = ""
+        var i: Int = input.length - 1
+        while (i >= 0) {
+            if (input[i] == '\\') {
+                break
+            } else {
+                retString += input[i]
+            }
+            i--
+        }
+        return retString.reversed()
     }
 }
