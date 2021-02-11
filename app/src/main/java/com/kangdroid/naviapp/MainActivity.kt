@@ -67,29 +67,22 @@ class MainActivity : AppCompatActivity() {
             tab.text = getBriefName(pagerAdapter.pages[position].folder)
         }.attach()
 
-        findViewById<ToggleButton>(R.id.tgb_asc_dsc).setOnCheckedChangeListener { _, isChecked ->
-            sortReverse = isChecked
+        val shuffleTypeTGB: ToggleButton = findViewById(R.id.tgb_shuffle_type)
+        val sortByLMTTGB: ToggleButton = findViewById(R.id.tgb_name_lmt)
+        val reverseTGB: ToggleButton = findViewById(R.id.tgb_asc_dsc)
+
+        val sortListener: (CompoundButton, Boolean) -> Unit = { _, _ ->
+            pagerAdapter.sort(
+                when (sortByLMTTGB.isChecked) {
+                    true -> if (shuffleTypeTGB.isChecked) FileSortingMode.LMT else FileSortingMode.TypedLMT
+                    false -> if (shuffleTypeTGB.isChecked) FileSortingMode.Name else FileSortingMode.TypedName
+                }, reverseTGB.isChecked
+            )
         }
 
-
-//        TODO should link these sorting buttons' events to proper FileRecyclerAdapter
-
-//        val shuffleTypeTGB: ToggleButton = findViewById(R.id.tgb_shuffle_type)
-//        val sortByLMTTGB: ToggleButton = findViewById(R.id.tgb_name_lmt)
-//
-//        shuffleTypeTGB.setOnCheckedChangeListener { _, isChecked ->
-//            sortMode = when (sortByLMTTGB.isChecked) {
-//                true -> if (isChecked) FileSortingMode.LMT else FileSortingMode.TypedLMT
-//                false -> if (isChecked) FileSortingMode.Name else FileSortingMode.TypedName
-//            }
-//        }
-//
-//        sortByLMTTGB.setOnCheckedChangeListener { _, isChecked ->
-//            sortMode = when (shuffleTypeTGB.isChecked) {
-//                true -> if (isChecked) FileSortingMode.LMT else FileSortingMode.Name
-//                false -> if (isChecked) FileSortingMode.TypedLMT else FileSortingMode.TypedName
-//            }
-//        }
+        shuffleTypeTGB.setOnCheckedChangeListener(sortListener)
+        sortByLMTTGB.setOnCheckedChangeListener(sortListener)
+        reverseTGB.setOnCheckedChangeListener(sortListener)
     }
 
     override fun onBackPressed() {

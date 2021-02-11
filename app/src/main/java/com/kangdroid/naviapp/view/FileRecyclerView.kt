@@ -43,16 +43,19 @@ class FileRecyclerAdapter(val folder: FileData, private val pagerAdapter: FilePa
     RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
     private var items: SortedFileList = _items
 
-    var reversed: Boolean
-        get() = items.reversed
-        set(value) {
-            items.reversed = value
+    fun sort(mode: FileSortingMode, reverse: Boolean) {
+        var isChanged: Boolean = false
+        if (items.comparator != mode) {
+            items.comparator = mode
+            isChanged = true
+        }
+        if (items.isReversed != reverse) {
+            items.isReversed = reverse
+            isChanged = true
+        }
+        if (isChanged){
             notifyDataSetChanged()
         }
-
-    fun setSortingMode(mode: FileSortingMode) {
-        items.comparator = mode
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileRecyclerViewHolder {

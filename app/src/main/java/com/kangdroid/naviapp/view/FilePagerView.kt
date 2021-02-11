@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.kangdroid.naviapp.R
+import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.data.FileData
 
 class FilePagerViewHolder(itemView: View) :
@@ -24,9 +26,28 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
     private val cachedPages: MutableMap<String, FileRecyclerAdapter> = mutableMapOf()
     val pages: ArrayList<FileRecyclerAdapter> = arrayListOf()
 
-    fun updatePage(token: String) {
-        val page: FileRecyclerAdapter = cachedPages[token] ?: return    // should raise an exception
-        // TODO should use method of FileRecyclerAdapter to update with fresh data
+    private var sortingMode: FileSortingMode = FileSortingMode.TypedName
+    private var isReversed: Boolean = false
+
+    init {
+        view.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                sortCurrentPage()
+                super.onPageSelected(position)
+            }
+        })
+    }
+
+    fun sort(mode: FileSortingMode, reverse: Boolean) {
+        sortingMode = mode
+        isReversed = reverse
+        sortCurrentPage()
+    }
+
+    private fun sortCurrentPage() {
+        if (view.currentItem < pages.size) {
+            pages[view.currentItem].sort(sortingMode, isReversed)
+        }
     }
 
     fun cachePage(page: FileRecyclerAdapter) {
