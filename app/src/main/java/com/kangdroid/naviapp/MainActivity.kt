@@ -26,13 +26,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.tb_main))
         if (!ServerManagement.initServerCommunication()) {
             Log.wtf("MainActivity", "Server initiation failed!")
             Log.wtf("MainActivity", "This should NOT be happened!")
         }
 
         pagesVP = findViewById(R.id.vp_test)
-
 
         val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pagesVP).also {
             pagesVP.adapter = it

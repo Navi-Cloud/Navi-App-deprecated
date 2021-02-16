@@ -8,6 +8,16 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:titleTextColor="@color/white" /> <!--TODO should use a custom theme instead of using resource directly-->
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_test"
         android:layout_width="match_parent"
