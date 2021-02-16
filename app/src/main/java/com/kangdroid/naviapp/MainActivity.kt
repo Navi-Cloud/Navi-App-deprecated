@@ -2,6 +2,7 @@ package com.kangdroid.naviapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.util.Log
 import android.widget.CompoundButton
 import android.widget.ToggleButton
@@ -92,6 +93,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main_action, menu)
+        return true
     }
     private fun initData(): List<FileData> {
         val responseList: List<FileData>
