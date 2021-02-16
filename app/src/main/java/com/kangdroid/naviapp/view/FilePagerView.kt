@@ -79,7 +79,7 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
             this
         ).also {
             coroutineScope.launch{
-                Log.v("FilePager","coroutine")
+                cachePage(it)
                 val response: List<FileData> = ServerManagement.getInsideFiles(fileData.token)!!
                 withContext(Dispatchers.Main) {
                     FileRecyclerAdapter(
@@ -101,7 +101,6 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
                             insertPage(view.currentItem + 1, this)
                             notifyDataSetChanged()
                         }
-                        Log.v("FilePager","insertpage")
                         view.currentItem = view.currentItem + 1
                         println(cachedPages)
                         println(pages)
@@ -109,7 +108,7 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
                     }
                 }
             }
-            cachePage(it) }
+        }
         view.currentItem = view.currentItem + 1
         println(cachedPages)
         println(pages)
