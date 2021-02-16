@@ -15,10 +15,15 @@ enum class FileType {
     Folder, File
 }
 
-fun getBriefName(file: FileData): String = file.fileName.let {
-    if (it.contains('/')) it.split('/').let { tokens -> tokens[tokens.size - 1] } else it
-}.let {
-    if (file.fileType == FileType.Folder.toString()) "$it/" else it
+fun getBriefName(file: FileData): String {
+    val toSplit: Char = if (file.fileName.contains('\\')) {
+        '\\'
+    } else {
+        '/'
+    }
+
+    val listToken: List<String> = file.fileName.split(toSplit)
+    return listToken[listToken.size - 1]
 }
 
 fun getFormattedDate(file: FileData): String = SimpleDateFormat(
