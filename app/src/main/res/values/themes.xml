@@ -20,6 +20,6 @@
 
     <style name="ToolbarTheme">
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/purple_200</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 </resources>
