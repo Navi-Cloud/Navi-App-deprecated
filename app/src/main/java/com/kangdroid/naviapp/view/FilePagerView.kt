@@ -74,44 +74,34 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
     }
 
     fun exploreFolder(fileData: FileData) {
-        val page: FileRecyclerAdapter = cachedPages[fileData.token] ?: FileRecyclerAdapter(
-            fileData,
-            this
-        ).also {
-            coroutineScope.launch{
-                cachePage(it)
-                val response: List<FileData> = ServerManagement.getInsideFiles(fileData.token)!!
-                withContext(Dispatchers.Main) {
-                    FileRecyclerAdapter(
-                        FileData(
-                            0,
-                            fileData.fileName,
-                            FileType.Folder.toString(),
-                            "test-token",
-                            System.currentTimeMillis()
-                        ), this@FilePagerAdapter
-                    ).apply{
-                        pagerAdapter.addPage(this)
-                        pagerAdapter.notifyDataSetChanged()
-                        for (data in response){
-                            data.fileName = testString(File(data.fileName).name)
-                            add(data)
-                        }
-                        if (pages.lastIndex <= view.currentItem || pages[view.currentItem + 1].folder.token != fileData.token) {
-                            insertPage(view.currentItem + 1, this)
-                            notifyDataSetChanged()
-                        }
-                        view.currentItem = view.currentItem + 1
-                        println(cachedPages)
-                        println(pages)
-                        notifyDataSetChanged()
+        // TODO: Do we really need "this"?
+        val doWeReallyNeedThis = this
+        coroutineScope.launch {
+            val response: List<FileData> = ServerManagement.getInsideFiles(fileData.token) ?: run {
+                Log.e("FilePagerAdapter", "Cannot Retrieve list of filedata. Returning empty file data.")
+                emptyList()
+            }
+
+            withContext(Dispatchers.Main) {
+                val page: FileRecyclerAdapter = cachedPages[fileData.token] ?: FileRecyclerAdapter(
+                    fileData,
+                    doWeReallyNeedThis
+                ).also {
+                    cachePage(it)
+                    for (data in response) {
+                        data.fileName = File(data.fileName).name
+                        it.add(data)
                     }
                 }
+                if (pages.lastIndex <= view.currentItem || pages[view.currentItem + 1].folder.token != fileData.token) {
+                    insertPage(view.currentItem + 1, page)
+                    notifyDataSetChanged()
+                }
+                view.currentItem = view.currentItem + 1
+                println(cachedPages)
+                println(pages)
             }
         }
-        view.currentItem = view.currentItem + 1
-        println(cachedPages)
-        println(pages)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilePagerViewHolder {
