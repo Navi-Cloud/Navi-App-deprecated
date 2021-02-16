@@ -1,5 +1,6 @@
 package com.kangdroid.naviapp.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,10 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.kangdroid.naviapp.R
 import com.kangdroid.naviapp.custom.FileSortingMode
 import com.kangdroid.naviapp.data.FileData
+import com.kangdroid.naviapp.data.FileType
+import com.kangdroid.naviapp.server.ServerManagement
+import kotlinx.coroutines.*
+import java.io.File
 
 class FilePagerViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
@@ -25,7 +30,7 @@ class FilePagerViewHolder(itemView: View) :
 class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<FilePagerViewHolder>() {
     private val cachedPages: MutableMap<String, FileRecyclerAdapter> = mutableMapOf()
     val pages: ArrayList<FileRecyclerAdapter> = arrayListOf()
-
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
     private var sortingMode: FileSortingMode = FileSortingMode.TypedName
     private var isReversed: Boolean = false
 
@@ -72,11 +77,39 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
         val page: FileRecyclerAdapter = cachedPages[fileData.token] ?: FileRecyclerAdapter(
             fileData,
             this
-        ).also { cachePage(it) }
-        if (pages.lastIndex <= view.currentItem || pages[view.currentItem + 1].folder.token != fileData.token) {
-            insertPage(view.currentItem + 1, page)
-            notifyDataSetChanged()
-        }
+        ).also {
+            coroutineScope.launch{
+                Log.v("FilePager","coroutine")
+                val response: List<FileData> = ServerManagement.getInsideFiles(fileData.token)!!
+                withContext(Dispatchers.Main) {
+                    FileRecyclerAdapter(
+                        FileData(
+                            0,
+                            fileData.fileName,
+                            FileType.Folder.toString(),
+                            "test-token",
+                            System.currentTimeMillis()
+                        ), this@FilePagerAdapter
+                    ).apply{
+                        pagerAdapter.addPage(this)
+                        pagerAdapter.notifyDataSetChanged()
+                        for (data in response){
+                            data.fileName = testString(File(data.fileName).name)
+                            add(data)
+                        }
+                        if (pages.lastIndex <= view.currentItem || pages[view.currentItem + 1].folder.token != fileData.token) {
+                            insertPage(view.currentItem + 1, this)
+                            notifyDataSetChanged()
+                        }
+                        Log.v("FilePager","insertpage")
+                        view.currentItem = view.currentItem + 1
+                        println(cachedPages)
+                        println(pages)
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+            cachePage(it) }
         view.currentItem = view.currentItem + 1
         println(cachedPages)
         println(pages)
@@ -93,4 +126,18 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
     }
 
     override fun getItemCount(): Int = pages.size
+
+    fun testString(input: String): String {
+        var retString: String = ""
+        var i: Int = input.length - 1
+        while (i >= 0) {
+            if (input[i] == '\\') {
+                break
+            } else {
+                retString += input[i]
+            }
+            i--
+        }
+        return retString.reversed()
+    }
 }

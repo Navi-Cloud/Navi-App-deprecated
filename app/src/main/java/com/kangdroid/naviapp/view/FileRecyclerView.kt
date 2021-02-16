@@ -25,7 +25,6 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
     private val tvLastModifiedTime: TextView =
         itemView.findViewById(R.id.tv_last_modified_time)
     private val ADAPTER_TAG: String = "FileRecyclerAdapter"
-    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
     fun bind(fileData: FileData) {
         imgFileType.setImageResource(
@@ -67,7 +66,7 @@ class FileRecyclerViewHolder(itemView: View, private val pagerAdapter: FilePager
 
 class FileRecyclerAdapter(
     val folder: FileData,
-    private val pagerAdapter: FilePagerAdapter,
+    val pagerAdapter: FilePagerAdapter,
     _items: SortedFileList = SortedFileList()
 ) :
     RecyclerView.Adapter<FileRecyclerViewHolder>(), MutableList<FileData> by _items {
