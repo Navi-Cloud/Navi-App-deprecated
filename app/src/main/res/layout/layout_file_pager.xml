@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabGravity="start"
+        app:tabMode="scrollable"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/tgb_name_lmt"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:checked="false"
+            android:minHeight="0dip"
+            android:textOff="@string/sort_name"
+            android:textOn="@string/sort_lmt" />
+
+        <ToggleButton
+            android:id="@+id/tgb_asc_dsc"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="0dip"
+            android:textOff="@string/sort_ascending"
+            android:textOn="@string/sort_descending" />
+
+        <ToggleButton
+            android:id="@+id/tgb_shuffle_type"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="0dip"
+            android:textOff="@string/sort_type"
+            android:textOn="@string/sort_type_not" />
+
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_pages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>
