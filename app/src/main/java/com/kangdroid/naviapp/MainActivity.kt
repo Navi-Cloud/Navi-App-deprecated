@@ -32,15 +32,25 @@ class MainActivity : AppCompatActivity() {
             Log.wtf("MainActivity", "Server initiation failed!")
             Log.wtf("MainActivity", "This should NOT be happened!")
         }
+        initializeViews()
+    }
 
-        pagesVP = findViewById(R.id.vp_test)
+    protected open fun setLayout() = setContentView(R.layout.activity_main)
+
+    protected open fun setToolbar() = setSupportActionBar(findViewById(R.id.tb_main))
+
+    protected fun initializeViews() {
+        setLayout()
+        setToolbar()
+
+        pagesVP = findViewById(R.id.vp_pages)
 
         val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pagesVP).also {
             pagesVP.adapter = it
         }
 
 
-        val tabs: TabLayout = findViewById(R.id.tl_test)
+        val tabs: TabLayout = findViewById(R.id.tl_path)
         TabLayoutMediator(tabs, pagesVP) { tab, position ->
             tab.text = getBriefName(pagerAdapter.pages[position].folder)
         }.attach()
