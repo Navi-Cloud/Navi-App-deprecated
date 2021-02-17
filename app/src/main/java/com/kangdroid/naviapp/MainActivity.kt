@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_main_action, menu)
+        menuInflater.inflate(R.menu.main_action, menu)
         return true
     }
     private fun initData(): List<FileData> {
