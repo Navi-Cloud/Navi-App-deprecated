@@ -1,9 +1,11 @@
 package com.kangdroid.naviapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.util.Log
+import android.view.MenuItem
 import android.widget.CompoundButton
 import android.widget.ToggleButton
 import androidx.viewpager2.widget.ViewPager2
@@ -19,7 +21,7 @@ import com.kangdroid.naviapp.view.FileRecyclerAdapter
 import kotlinx.coroutines.*
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
     private lateinit var pagesVP: ViewPager2
     private val MAIN_UI: String = "MainActivity"
     private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -108,6 +110,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_action, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_upload -> {
+            startActivity(Intent(this, UploadingActivity::class.java))
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
     private fun initData(): List<FileData> {
         val responseList: List<FileData>
