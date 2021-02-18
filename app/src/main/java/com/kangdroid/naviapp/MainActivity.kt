@@ -22,7 +22,8 @@ import kotlinx.coroutines.*
 import java.io.File
 
 open class MainActivity : AppCompatActivity() {
-    private lateinit var pagesVP: ViewPager2
+    protected lateinit var pagesVP: ViewPager2
+    protected lateinit var pagerAdapter: FilePagerAdapter
     private val MAIN_UI: String = "MainActivity"
     private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
@@ -47,7 +48,7 @@ open class MainActivity : AppCompatActivity() {
 
         pagesVP = findViewById(R.id.vp_pages)
 
-        val pagerAdapter: FilePagerAdapter = FilePagerAdapter(pagesVP).also {
+        pagerAdapter = FilePagerAdapter(pagesVP).also {
             pagesVP.adapter = it
         }
 
