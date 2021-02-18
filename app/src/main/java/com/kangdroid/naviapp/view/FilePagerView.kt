@@ -89,7 +89,7 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
                 ).also {
                     cachePage(it)
                     for (data in response) {
-                        data.fileName = File(data.fileName).name
+//                        data.fileName = File(data.fileName).name  TODO should check if this line is necessary
                         it.add(data)
                     }
                 }

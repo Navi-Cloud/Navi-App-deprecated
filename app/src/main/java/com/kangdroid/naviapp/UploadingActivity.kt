@@ -1,16 +1,10 @@
 package com.kangdroid.naviapp
 
-import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 
 class UploadingActivity : MainActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initializeViews()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.uploading_action, menu)
         return true
@@ -19,6 +13,7 @@ class UploadingActivity : MainActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_select_path -> {
             // TODO should implement uploading functionality
+            Log.d("PATH", pagerAdapter.pages[pagesVP.currentItem].folder.fileName)
             true
         }
         else -> super.onOptionsItemSelected(item)

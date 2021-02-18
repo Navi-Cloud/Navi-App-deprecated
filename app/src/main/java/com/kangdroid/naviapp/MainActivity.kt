@@ -52,7 +52,6 @@ open class MainActivity : AppCompatActivity() {
             pagesVP.adapter = it
         }
 
-
         val tabs: TabLayout = findViewById(R.id.tl_path)
         TabLayoutMediator(tabs, pagesVP) { tab, position ->
             tab.text = getBriefName(pagerAdapter.pages[position].folder)
@@ -81,7 +80,7 @@ open class MainActivity : AppCompatActivity() {
                 FileRecyclerAdapter(
                     FileData(
                         0,
-                        "root",
+                        "/tmp",
                         FileType.Folder.toString(),
                         "test-token",
                         System.currentTimeMillis()
@@ -90,7 +89,7 @@ open class MainActivity : AppCompatActivity() {
                     pagerAdapter.addPage(this)
                     pagerAdapter.notifyDataSetChanged()
                     for (data in response){
-                        data.fileName = testString(File(data.fileName).name)
+//                        data.fileName = testString(File(data.fileName).name) TODO should check if this line is necessary
                         Log.e("TESTING", "${File(data.fileName).isAbsolute}")
                         add(data)
                     }
