@@ -1,6 +1,7 @@
 package com.kangdroid.naviapp.server
 
 import android.util.Log
+import com.kangdroid.naviapp.BuildConfig
 import okhttp3.ResponseBody
 import com.kangdroid.naviapp.data.FileData
 import retrofit2.Call
@@ -20,7 +21,9 @@ object ServerManagement {
      * Returns true if both retroFit/api is NOT-NULL,
      * false when either of retrofit/api is null
      */
-    fun initServerCommunication(serverAddress: String, serverPort: String): Boolean {
+    fun initServerCommunication(): Boolean {
+        val serverAddress: String = BuildConfig.SERVER_URL
+        val serverPort: String = BuildConfig.SERVER_PORT
         retroFit = try {
             Retrofit.Builder()
                 .baseUrl("http://$serverAddress:$serverPort")
