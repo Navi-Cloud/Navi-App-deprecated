@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!ServerManagement.initServerCommunication("172.30.1.7", "8080")) {
+        if (!ServerManagement.initServerCommunication()) {
             Log.wtf("MainActivity", "Server initiation failed!")
             Log.wtf("MainActivity", "This should NOT be happened!")
         }
