@@ -18,9 +18,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            it.buildConfigField 'String', 'SERVER_URL', TestServerAddress
+            it.buildConfigField 'String', 'SERVER_PORT', TestServerPort
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            it.buildConfigField 'String', 'SERVER_URL', ReleaseServerAddress
+            it.buildConfigField 'String', 'SERVER_PORT', ReleaseServerPort
         }
     }
     compileOptions {
