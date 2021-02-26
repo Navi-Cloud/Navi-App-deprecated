@@ -1,13 +1,34 @@
 package com.kangdroid.naviapp
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.kangdroid.naviapp.server.ServerManagement
+import com.kangdroid.naviapp.utils.NaviFileUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 
 class UploadingActivity : FilePagerActivity() {
     override val className: String = "UploadingActivity"
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
+    private lateinit var fileUri: String
 
-    override fun initializeContentView() = setContentView(R.layout.activity_uploading)
+    override fun initializeContentView() {
+        setContentView(R.layout.activity_uploading)
+        val intent : Intent = Intent(Intent.ACTION_GET_CONTENT).apply{
+            type = "*/*"
+        }
+        startActivityForResult(intent,1)
+    }
 
     override fun initializeToolbar() {
         setSupportActionBar(findViewById(R.id.tb_upload))
@@ -24,9 +45,39 @@ class UploadingActivity : FilePagerActivity() {
         R.id.action_select_path -> {
             // TODO should implement uploading functionality
             Log.d("PATH", pagerAdapter.pages[pagesVP.currentItem].folder.fileName)
+            coroutineScope.launch {
+                uploading(pagerAdapter.pages[pagesVP.currentItem].folder.token)
+            }
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, resultData)
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            resultData?.data?.also { uri ->
+                Log.i("TAG", "Uri: $uri")
+                fileUri = NaviFileUtils.getPathFromUri(this, uri)
+                if (fileUri == NaviFileUtils.ERROR_GETTING_FILENAME) {
+                    fileUri = ""
+                }
+            }
+        }
+    }
+
+    fun uploading(uploadPath : String){
+        val file : File = File(fileUri)
+        Log.i("!!!!!!!!!!!!!!!","file : $file")
+        val requestBody : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file)
+        val uploadFile : MultipartBody.Part = MultipartBody.Part.createFormData("uploadFile",file.name,requestBody)
+        var param : HashMap<String,Any> = HashMap()
+        with(param){
+            put("uploadPath", uploadPath)
+        }
+        Log.i("!!!!!!!!!!!!!!!!!!!!!!!!","hasmap : ${param.values}")
+        ServerManagement.upload(param, uploadFile)
     }
 
 }

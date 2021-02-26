@@ -4,10 +4,12 @@ import android.util.Log
 import com.kangdroid.naviapp.BuildConfig
 import okhttp3.ResponseBody
 import com.kangdroid.naviapp.data.FileData
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Multipart
 
 object ServerManagement {
 
@@ -56,7 +58,6 @@ object ServerManagement {
             Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
             null
         }
-
         return response?.body()?.string() ?: ""
     }
 
@@ -76,5 +77,18 @@ object ServerManagement {
             null
         }
         return response?.body()
+    }
+
+    fun upload(Param : HashMap<String,Any>, file: MultipartBody.Part) : String {
+        val uploading: Call<ResponseBody>? = api?.upload(Param, file)
+        val response: Response<ResponseBody>? = try{
+            uploading?.execute()
+        }catch (e:Exception){
+            Log.e(TAG_SERVER_MANAGEMENT, "Error when uploading File.")
+            Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
+            null
+        }
+        Log.i("upload", "SUCEEEEEDDDDD")
+        return response?.body()?.string() ?: ""
     }
 }
