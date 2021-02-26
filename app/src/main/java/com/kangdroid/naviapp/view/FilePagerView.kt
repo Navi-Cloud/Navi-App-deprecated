@@ -27,7 +27,11 @@ class FilePagerViewHolder(itemView: View) :
     }
 }
 
-class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<FilePagerViewHolder>() {
+class FilePagerAdapter(
+    private val view: ViewPager2,
+    _onFileSelectedCallback: OnFileSelectedCallback
+) : RecyclerView.Adapter<FilePagerViewHolder>() {
+    private val onFileSelectedCallback: OnFileSelectedCallback = _onFileSelectedCallback
     private val cachedPages: MutableMap<String, FileRecyclerAdapter> = mutableMapOf()
     val pages: ArrayList<FileRecyclerAdapter> = arrayListOf()
     private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -74,18 +78,19 @@ class FilePagerAdapter(private val view: ViewPager2) : RecyclerView.Adapter<File
     }
 
     fun exploreFolder(fileData: FileData) {
-        // TODO: Do we really need "this"?
-        val doWeReallyNeedThis = this
         coroutineScope.launch {
             val response: List<FileData> = ServerManagement.getInsideFiles(fileData.token) ?: run {
-                Log.e("FilePagerAdapter", "Cannot Retrieve list of filedata. Returning empty file data.")
+                Log.e(
+                    "FilePagerAdapter",
+                    "Cannot Retrieve list of filedata. Returning empty file data."
+                )
                 emptyList()
             }
 
             withContext(Dispatchers.Main) {
                 val page: FileRecyclerAdapter = cachedPages[fileData.token] ?: FileRecyclerAdapter(
                     fileData,
-                    doWeReallyNeedThis
+                    onFileSelectedCallback
                 ).also {
                     cachePage(it)
                     for (data in response) {
