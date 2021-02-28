@@ -8,10 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.kangdroid.naviapp.server.ServerManagement
 import com.kangdroid.naviapp.utils.NaviFileUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -51,6 +48,9 @@ class UploadingActivity : FilePagerActivity() {
             Log.d("PATH", pagerAdapter.pages[pagesVP.currentItem].folder.fileName)
             coroutineScope.launch {
                 uploading(pagerAdapter.pages[pagesVP.currentItem].folder.token)
+                withContext(Dispatchers.Main) {
+                    finish()
+                }
             }
             true
         }
