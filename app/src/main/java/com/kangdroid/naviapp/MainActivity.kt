@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -21,6 +22,7 @@ open class MainActivity : FilePagerActivity() {
         val infoLL: LinearLayout by lazy { findViewById(R.id.ll_selected_info) }
         val briefNameTV: TextView by lazy { findViewById(R.id.tv_selected_brief_name) }
         val nameTV: TextView by lazy { findViewById(R.id.tv_selected_name) }
+        val downloadBTN: Button by lazy { findViewById(R.id.btn_download) }
     }
 
     override fun initializeContentView() = setContentView(R.layout.activity_main)
@@ -46,6 +48,10 @@ open class MainActivity : FilePagerActivity() {
             )
             setPeekHeight(fileInteractBS.peekLL.measuredHeight, true)
             state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        fileInteractBS.downloadBTN.setOnClickListener {
+            // TODO should implement download path selection and download
         }
     }
 
