@@ -58,7 +58,9 @@ open class MainActivity : FilePagerActivity() {
 
     override fun onFileSelected(fileData: FileData, page: FileRecyclerAdapter): Boolean {
         if (!super.onFileSelected(fileData, page)) {
-            fileInteractBSB.state = BottomSheetBehavior.STATE_COLLAPSED
+            if (fileInteractBSB.state == BottomSheetBehavior.STATE_HIDDEN) {
+                fileInteractBSB.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
             fileInteractBS.briefNameTV.text = getBriefName(fileData)
             fileInteractBS.nameTV.text = fileData.fileName
         }
@@ -79,12 +81,10 @@ open class MainActivity : FilePagerActivity() {
     }
 
     override fun onBackPressed() {
-        if (pagesVP.currentItem > 0) {
-            pagesVP.currentItem -= 1
+        if (fileInteractBSB.state == BottomSheetBehavior.STATE_EXPANDED) {
+            fileInteractBSB.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
             super.onBackPressed()
         }
     }
-
-
 }
