@@ -77,7 +77,7 @@ class UploadingActivity : FilePagerActivity() {
         }
     }
 
-    fun uploading(uploadPath : String){
+    private fun uploading(uploadPath : String){
         val filename : String = fileUri.substring(fileUri.lastIndexOf("/")+1)
 
         var file : File = File.createTempFile(filename,null,cacheDir)
