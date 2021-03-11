@@ -1,6 +1,7 @@
 package com.kangdroid.naviapp
 
 import android.content.Intent
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -10,10 +11,13 @@ import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.getBriefName
+import com.kangdroid.naviapp.server.ServerManagement.download
 import com.kangdroid.naviapp.view.FileRecyclerAdapter
+import kotlinx.coroutines.*
 
 open class MainActivity : FilePagerActivity() {
     override val className: String = "MainActivity"
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
     private lateinit var fileInteractBSB: BottomSheetBehavior<*>
     private var fileInteractBS = object {
@@ -50,9 +54,6 @@ open class MainActivity : FilePagerActivity() {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        fileInteractBS.downloadBTN.setOnClickListener {
-            // TODO should implement download path selection and download
-        }
     }
 
 
@@ -63,6 +64,12 @@ open class MainActivity : FilePagerActivity() {
             }
             fileInteractBS.briefNameTV.text = getBriefName(fileData)
             fileInteractBS.nameTV.text = fileData.fileName
+        }
+        fileInteractBS.downloadBTN.setOnClickListener {
+            Log.e("DOWNLOAD","START!!")
+            coroutineScope.launch {
+                download(fileData.token) //행운의 편지
+            }
         }
         return true
     }

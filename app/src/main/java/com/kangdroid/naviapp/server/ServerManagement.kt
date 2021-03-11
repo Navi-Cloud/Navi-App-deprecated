@@ -1,15 +1,19 @@
 package com.kangdroid.naviapp.server
 
+import android.os.Environment
 import android.util.Log
 import com.kangdroid.naviapp.BuildConfig
-import okhttp3.ResponseBody
 import com.kangdroid.naviapp.data.FileData
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Multipart
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.net.URLDecoder
 
 object ServerManagement {
 
@@ -90,5 +94,55 @@ object ServerManagement {
         }
         Log.i("upload", "SUCEEEEEDDDDD")
         return response?.body()?.string() ?: ""
+    }
+
+    fun download(token: String) {
+        val downloading : Call<ResponseBody> ?= api?.download(token)
+        val response: Response<ResponseBody>?=try{
+            downloading?.execute()
+        }catch (e: Exception){
+            Log.e(TAG_SERVER_MANAGEMENT, "Error when downloading File.")
+            Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
+            null
+        }
+        if (response != null) {
+            var header : String? = response.headers().get("Content-Disposition")
+            header = URLDecoder.decode(header,"UTF-8")
+            var fileName : String? = header?.replace("attachment; filename=\"", "")
+            fileName = fileName?.substring(fileName.lastIndexOf("/")+1,fileName.length-1)
+            Log.e("SERVERMANAGE", "fileName : $fileName")
+            Log.e("SERVERMANAGE", "Content : ${response.body().toString()}")
+
+            if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                val pa : String = Environment.getExternalStorageDirectory().toString() + "/Download"
+                val file = File(pa, fileName)
+                try{
+
+                    val fileReader = ByteArray(4096)
+                    val fileSize: Long ?= response.body()?.contentLength()
+                    var fileSizeDownloaded: Long = 0
+
+                    val inputStream : InputStream? = response.body()?.byteStream()
+                    val outputStream = FileOutputStream(file)
+
+                    while (true) {
+                        val read: Int ?= inputStream?.read(fileReader)
+                        if (read == -1) {
+                            break
+                        }
+                        if (read != null) {
+                            outputStream.write(fileReader, 0, read)
+                            Log.e("DOWNLOAD", "outputstream : $outputStream")
+                            fileSizeDownloaded += read.toLong()
+                        }
+                        Log.e("DOWNLOAD", "file download: $fileSizeDownloaded of $fileSize")
+                    }
+                    outputStream.flush()
+                }catch (e:Exception){
+                    Log.e("External Storage", "External Storage is not ready.")
+                    Log.e("External Storage", e.stackTraceToString())
+                }
+            }
+        }
     }
 }
