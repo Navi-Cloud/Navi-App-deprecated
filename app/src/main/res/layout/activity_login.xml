@@ -31,13 +31,14 @@
         tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/id_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                android:hint="ID" />
             android:hapticFeedbackEnabled="false"
             android:hint="hint"
             android:inputType="text"
@@ -53,9 +54,10 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/pw_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                android:hint="Password" />
             android:hint="hint"
             android:inputType="text"
             android:maxLines="1" />

@@ -4,6 +4,7 @@ import android.os.Environment
 import android.util.Log
 import com.kangdroid.naviapp.BuildConfig
 import com.kangdroid.naviapp.data.FileData
+import com.kangdroid.naviapp.data.LoginRequest
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -85,6 +86,8 @@ object ServerManagement {
 
     fun upload(Param : HashMap<String,Any>, file: MultipartBody.Part) : String {
         val uploading: Call<ResponseBody>? = api?.upload(Param, file)
+
+        Log.d("UPLOAD","$uploading")
         val response: Response<ResponseBody>? = try{
             uploading?.execute()
         }catch (e:Exception){
@@ -144,5 +147,32 @@ object ServerManagement {
                 }
             }
         }
+    }
+
+    fun login(userLoginRequest: LoginRequest): String {
+
+        val log: Call<ResponseBody>? = api?.loginUser(userLoginRequest)
+
+        val response : Response<ResponseBody>?=try{
+                log?.execute()
+        }catch(e:Exception) {
+            Log.e(TAG_SERVER_MANAGEMENT, "Error when login.")
+            Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
+            null
+        }
+        return response?.body()?.string() ?: ""
+    }
+
+    fun register(Name : String, userName : String, userEmail : String, userPassword : String) : String {
+        val register : Call<ResponseBody> ?= api?.register(Name,userName,userEmail,userPassword)
+        val response : Response<ResponseBody>?=try{
+            register?.execute()
+        }catch(e:Exception) {
+            Log.e(TAG_SERVER_MANAGEMENT, "Error when register.")
+            Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
+            null
+        }
+        Log.i("REGISTER", "$userName + $userEmail + $userPassword")
+        return response?.body()?.string() ?: ""
     }
 }
