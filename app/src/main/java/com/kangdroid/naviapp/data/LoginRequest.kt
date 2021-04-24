@@ -1,6 +1,6 @@
 package com.kangdroid.naviapp.data
 
 class LoginRequest (
-    var userName : String,
+    var userId : String,
     var userPassword : String
 )
