@@ -39,7 +39,9 @@ class LoginActivity : AppCompatActivity() {
 
             Log.i("LOGIN_ACTIVITY", "${login.userId}+${login.userPassword}")
             coroutineScope.launch {
-                ServerManagement.login(login)
+                val response: String = ServerManagement.login(login)
+
+                Log.d(LoginActivity::class.java.simpleName, "Response: $response")
             }
         }
      }
