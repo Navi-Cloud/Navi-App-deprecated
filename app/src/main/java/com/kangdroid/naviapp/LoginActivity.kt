@@ -7,10 +7,15 @@ import com.google.android.material.textfield.TextInputEditText
 import com.kangdroid.naviapp.data.LoginRequest
 import com.kangdroid.naviapp.databinding.ActivityLoginBinding
 import com.kangdroid.naviapp.server.ServerManagement
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     lateinit var binding  : ActivityLoginBinding
+    private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +38,9 @@ class LoginActivity : AppCompatActivity() {
             val login = LoginRequest(id.text.toString(),pw.text.toString())
 
             Log.i("LOGIN_ACTIVITY", "${login.userName}+${login.userPassword}")
-            ServerManagement.login(login)
+            coroutineScope.launch {
+                ServerManagement.login(login)
+            }
         }
      }
 }
