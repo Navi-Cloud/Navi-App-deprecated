@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
             val login = LoginRequest(id.text.toString(),pw.text.toString())
 
-            Log.i("LOGIN_ACTIVITY", "${login.userName}+${login.userPassword}")
+            Log.i("LOGIN_ACTIVITY", "${login.userId}+${login.userPassword}")
             coroutineScope.launch {
                 ServerManagement.login(login)
             }
