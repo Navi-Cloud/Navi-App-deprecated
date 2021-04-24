@@ -16,6 +16,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (!ServerManagement.initServerCommunication()) {
+            Log.wtf(this::class.java.simpleName, "Server initiation failed!")
+            Log.wtf(this::class.java.simpleName, "This should NOT be happened!")
+        }
+
         init()
     }
 
