@@ -150,17 +150,17 @@ object ServerManagement {
     }
 
     fun login(userLoginRequest: LoginRequest): String {
+        val loginUserRequest: Call<ResponseBody>? = api?.loginUser(userLoginRequest)
 
-        val log: Call<ResponseBody>? = api?.loginUser(userLoginRequest)
+        val response : Response<ResponseBody> = runCatching {
+            loginUserRequest?.execute()
+        }.getOrNull() ?: return ""
 
-        val response : Response<ResponseBody>?=try{
-                log?.execute()
-        }catch(e:Exception) {
-            Log.e(TAG_SERVER_MANAGEMENT, "Error when login.")
-            Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
-            null
-        }
-        return response?.body()?.string() ?: ""
+        return if (response.isSuccessful) {
+            response.body()?.string()
+        } else {
+            response.errorBody()?.string()
+        } ?: ""
     }
 
     fun register(Name : String, userName : String, userEmail : String, userPassword : String) : String {
