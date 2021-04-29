@@ -36,6 +36,12 @@ class RegisterActivity : AppCompatActivity()  {
 
     private fun init() {
 
+        binding.button2.isEnabled = false
+
+        binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked) binding.button2.isEnabled = true
+        }
+
         binding.button2.setOnClickListener {
 
             pw = binding.Textpassword.text.toString()
@@ -72,6 +78,8 @@ class RegisterActivity : AppCompatActivity()  {
 
                 Log.d(RegisterActivity::class.java.simpleName, "Response: $response")
             }
+
+            finish()
         }
     }
 }
