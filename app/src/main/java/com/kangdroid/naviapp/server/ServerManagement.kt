@@ -30,8 +30,10 @@ object ServerManagement {
      * false when either of retrofit/api is null
      */
     fun initServerCommunication(): Boolean {
-        val serverAddress: String = BuildConfig.SERVER_URL
-        val serverPort: String = BuildConfig.SERVER_PORT
+        //val serverAddress: String = BuildConfig.SERVER_URL
+        //val serverPort: String = BuildConfig.SERVER_PORT
+        val serverAddress: String = "" // IP Addr
+        val serverPort: String = "8080"
         retroFit = try {
             Retrofit.Builder()
                 .baseUrl("http://$serverAddress:$serverPort")

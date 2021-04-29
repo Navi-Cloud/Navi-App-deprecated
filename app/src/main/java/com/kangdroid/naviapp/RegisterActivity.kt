@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.kangdroid.naviapp.data.RegisterRequest
 import com.kangdroid.naviapp.databinding.ActivityLoginBinding
 import com.kangdroid.naviapp.databinding.ActivityRegisterBinding
@@ -42,18 +43,17 @@ class RegisterActivity : AppCompatActivity()  {
             if(isChecked) binding.button2.isEnabled = true
         }
 
-        binding.button2.setOnClickListener {
+        //아이디 중복 체크
+        binding.button.setOnClickListener {
+            id = binding.TextId.text.toString()
+        }
 
+        binding.button2.setOnClickListener {
             pw = binding.Textpassword.text.toString()
             repw = binding.passwordRe.text.toString()
 
-            //아이디 중복 체크
-            binding.button.setOnClickListener {
-                id = binding.TextId.text.toString()
-            }
-
             // 이메일 @ 체크
-            if(!binding.Email.toString().contains("@")){
+            if(binding.Email.toString().contains('@')){
                 binding.textInputLayout.error = null
             }else{
                 binding.textInputLayout.error = "이메일 형식이 올바르지 않습니다."
@@ -67,18 +67,18 @@ class RegisterActivity : AppCompatActivity()  {
             }
 
             val register = RegisterRequest(
-                binding.Name.text.toString(),
-                binding.TextId.text.toString(),
-                binding.Email.text.toString(),
-                binding.Textpassword.text.toString())
+                userName = binding.Name.text.toString(),
+                userId = binding.TextId.text.toString(),
+                userEmail = binding.Email.text.toString(),
+                userPassword = binding.Textpassword.text.toString()
+            )
 
             coroutineScope.launch {
 
-                val response: String =  ServerManagement.register(register)
+                val response: String = ServerManagement.register(register)
 
                 Log.d(RegisterActivity::class.java.simpleName, "Response: $response")
             }
-
             finish()
         }
     }
