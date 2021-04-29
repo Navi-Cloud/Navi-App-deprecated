@@ -1,5 +1,6 @@
 package com.kangdroid.naviapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -41,6 +42,11 @@ class LoginActivity : AppCompatActivity() {
 
                 Log.d(LoginActivity::class.java.simpleName, "Response: $response")
             }
+        }
+
+        binding.textView2.setOnClickListener {
+            val intent = Intent(this,RegisterActivity::class.java)
+            startActivity(intent)
         }
      }
 }
