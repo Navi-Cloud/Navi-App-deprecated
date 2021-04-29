@@ -11,44 +11,68 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_margin="50dp"
         android:text="Login"
         android:textColor="@color/dark_navy"
         android:textSize="50dp"
         android:textStyle="bold"
         />
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ID"
+        android:layout_marginHorizontal="60dp"
+        android:textColor="@color/dark_blue"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        />
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:boxStrokeWidthFocused="3dp"
+        app:boxStrokeWidth="3dp"
+        app:boxStrokeColor="@color/dark_navy"
         android:gravity="center">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/id_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="ID"
             android:background="#00000000"
-            android:hapticFeedbackEnabled="false"
             android:inputType="text"
             android:ems="15"
             android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PASSWORD"
+        android:layout_marginHorizontal="60dp"
+        android:textColor="@color/dark_blue"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        />
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        app:boxStrokeWidthFocused="3dp"
+        app:boxStrokeWidth="3dp"
+        app:boxStrokeColor="@color/dark_navy"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/pw_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Password"
             android:ems="15"
             android:background="#00000000"
             android:inputType="textPassword"
-            android:maxLines="1" />
+            android:maxLines="1"
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 
