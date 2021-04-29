@@ -47,8 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="ID"
-                android:background="#00000000"
-                android:backgroundTint="@color/white"/>
+                android:background="#00000000"/>
             android:hapticFeedbackEnabled="false"
             android:hint="hint"
             android:inputType="text"
@@ -107,16 +106,15 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_width="114dp"
+        android:layout_height="16dp"
         android:text="회원이 아니신가요?"
         android:textAllCaps="false"
         android:textSize="14sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.941"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
