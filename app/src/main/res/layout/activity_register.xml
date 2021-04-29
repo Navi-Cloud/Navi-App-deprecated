@@ -186,7 +186,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/sky_blue"
-                    android:hint="Password"
+                    android:hint="Password 재입력"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
