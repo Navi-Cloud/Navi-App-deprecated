@@ -28,6 +28,7 @@ class FilePagerViewHolder(itemView: View) :
 }
 
 class FilePagerAdapter(
+    private val userToken: String,
     private val view: ViewPager2,
     _onFileSelectedCallback: OnFileSelectedCallback
 ) : RecyclerView.Adapter<FilePagerViewHolder>() {
@@ -78,8 +79,12 @@ class FilePagerAdapter(
     }
 
     fun exploreFolder(fileData: FileData) {
+        var headers : HashMap<String, Any> = HashMap()
+        with(headers){
+            put("X-AUTH-TOKEN", userToken)
+        }
         coroutineScope.launch {
-            val response: List<FileData> = ServerManagement.getInsideFiles(fileData.token) ?: run {
+            val response: List<FileData> = ServerManagement.getInsideFiles(headers = headers, requestToken = fileData.token) ?: run {
                 Log.e(
                     "FilePagerAdapter",
                     "Cannot Retrieve list of filedata. Returning empty file data."

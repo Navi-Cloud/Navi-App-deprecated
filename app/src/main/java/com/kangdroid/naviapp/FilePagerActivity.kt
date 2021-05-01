@@ -23,6 +23,9 @@ abstract class FilePagerActivity : AppCompatActivity(), NamedClass {
     protected lateinit var pagesVP: ViewPager2
     protected lateinit var pagerAdapter: FilePagerAdapter
     private val coroutineScope: CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
+    protected val userToken: String by lazy {
+        intent.getStringExtra("userToken") ?: ""
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +63,7 @@ abstract class FilePagerActivity : AppCompatActivity(), NamedClass {
 
     protected open fun initializeViews() {
         pagesVP = findViewById<ViewPager2>(R.id.vp_pages)
-        pagerAdapter = FilePagerAdapter(pagesVP, ::onFileSelected).also {
+        pagerAdapter = FilePagerAdapter(userToken, pagesVP, ::onFileSelected).also {
             pagesVP.adapter = it
         }
         pagesVP.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
@@ -122,9 +125,15 @@ abstract class FilePagerActivity : AppCompatActivity(), NamedClass {
 
     private fun getRootData(): List<FileData> {
         val responseList: List<FileData>
-
+        var headers : HashMap<String, Any> = HashMap()
+        with(headers){
+            put("X-AUTH-TOKEN", userToken)
+        }
         with(ServerManagement) {
-            responseList = getInsideFiles(getRootToken()) ?: run {
+            val rootToken: String = getRootToken(headers = headers)
+            if(rootToken == "") { // fail to get root token
+            }
+            responseList = getInsideFiles(headers = headers, rootToken) ?: run {
                 Log.e(className, "Error occurred when connecting to server.")
                 Log.e(className, "Returning empty list..")
                 emptyList<FileData>()

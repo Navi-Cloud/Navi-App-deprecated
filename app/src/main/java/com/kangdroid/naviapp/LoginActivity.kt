@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
 import com.kangdroid.naviapp.data.LoginRequest
 import com.kangdroid.naviapp.databinding.ActivityLoginBinding
@@ -41,12 +42,28 @@ class LoginActivity : AppCompatActivity() {
                 val response: String = ServerManagement.login(login)
 
                 Log.d(LoginActivity::class.java.simpleName, "Response: $response")
+
+                if(response == "-1") {
+                    // login fail
+                } else {
+                    // login success
+                    val userToken = getTokenFromResponse(response)
+                    Log.d("GetRootToken form Response", userToken)
+                    val mainActivityIntentWithUserToken: Intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        .putExtra("userToken", userToken)
+                    startActivity(mainActivityIntentWithUserToken)
+                }
             }
         }
 
         binding.textView2.setOnClickListener {
-            val intent = Intent(this,RegisterActivity::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
      }
+
+    private fun getTokenFromResponse(response: String): String {
+        // Response Must have only "userToken" for now
+        return response.split(":")[1].replace(Regex("[\"{}]"), "")
+    }
 }

@@ -65,10 +65,16 @@ open class MainActivity : FilePagerActivity() {
             fileInteractBS.briefNameTV.text = getBriefName(fileData)
             fileInteractBS.nameTV.text = fileData.fileName
         }
+
+        var headers : HashMap<String, Any> = HashMap()
+        with(headers){
+            put("X-AUTH-TOKEN", userToken)
+        }
+
         fileInteractBS.downloadBTN.setOnClickListener {
             Log.e("DOWNLOAD","START!!")
             coroutineScope.launch {
-                download(fileData.token) //행운의 편지
+                download(headers = headers, token = fileData.token) //행운의 편지
             }
         }
         return true
