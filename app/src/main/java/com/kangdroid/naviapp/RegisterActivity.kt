@@ -59,8 +59,12 @@ class RegisterActivity : AppCompatActivity()  {
             }
         }
 
-        binding.button2.setOnClickListener {
+        //아이디 중복 체크
+        binding.button.setOnClickListener {
+            id = binding.TextId.text.toString()
+        }
 
+        binding.button2.setOnClickListener {
             pw = binding.Textpassword.text.toString()
             repw = binding.passwordRe.text.toString()
             email = binding.Email.toString()
@@ -76,14 +80,14 @@ class RegisterActivity : AppCompatActivity()  {
 
             else if(!pw_flag || !email_flag)
                 Toast.makeText(this,"양식을 올바르게 채우지 않았습니다.",Toast.LENGTH_SHORT).show()
-
+          
             else {
                 //아이디 중복 체크
                 binding.button.setOnClickListener {
                     id = binding.TextId.text.toString()
                 }
-
-                val register = RegisterRequest(
+              
+              val register = RegisterRequest(
                     binding.Name.text.toString(),
                     binding.TextId.text.toString(),
                     binding.Email.text.toString(),

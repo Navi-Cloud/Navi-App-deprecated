@@ -95,11 +95,17 @@ class UploadingActivity : FilePagerActivity() {
 
         val requestBody : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file)
         val uploadFile : MultipartBody.Part = MultipartBody.Part.createFormData("uploadFile",filename,requestBody)
+        var headers : HashMap<String, Any> = HashMap()
+
         var param : HashMap<String,Any> = HashMap()
         with(param){
             put("uploadPath", uploadPath)
         }
-        ServerManagement.upload(param, uploadFile)
+        with(headers){
+            put("X-AUTH-TOKEN", userToken)
+        }
+        Log.d("Response", userToken)
+        ServerManagement.upload(headers = headers, Param = param, file = uploadFile)
     }
 
 }

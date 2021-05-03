@@ -6,6 +6,7 @@ import com.kangdroid.naviapp.BuildConfig
 import com.kangdroid.naviapp.data.FileData
 import com.kangdroid.naviapp.data.LoginRequest
 import com.kangdroid.naviapp.data.RegisterRequest
+import okhttp3.Headers
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -30,8 +31,10 @@ object ServerManagement {
      * false when either of retrofit/api is null
      */
     fun initServerCommunication(): Boolean {
-        val serverAddress: String = BuildConfig.SERVER_URL
-        val serverPort: String = BuildConfig.SERVER_PORT
+        //val serverAddress: String = BuildConfig.SERVER_URL
+        //val serverPort: String = BuildConfig.SERVER_PORT
+        val serverAddress: String = "" // IP Addr
+        val serverPort: String = "8080"
         retroFit = try {
             Retrofit.Builder()
                 .baseUrl("http://$serverAddress:$serverPort")
@@ -55,8 +58,8 @@ object ServerManagement {
         return (retroFit != null && api != null)
     }
 
-    fun getRootToken(): String {
-        val tokenFunction: Call<ResponseBody>? = api?.getRootToken()
+    fun getRootToken(headers: HashMap<String,Any>): String {
+        val tokenFunction: Call<ResponseBody>? = api?.getRootToken(headers)
         val response: Response<ResponseBody>? = try {
             tokenFunction?.execute()
         } catch (e: Exception) {
@@ -64,6 +67,7 @@ object ServerManagement {
             Log.e(TAG_SERVER_MANAGEMENT, e.stackTraceToString())
             null
         }
+        Log.d("Response", response?.body()?.string() ?: response?.errorBody()!!.string())
         return response?.body()?.string() ?: ""
     }
 
@@ -73,8 +77,8 @@ object ServerManagement {
      * Returns: List of FileResponseDTO[The Response] - could be empty.
      * Returns: NULL when error occurred.
      */
-    fun getInsideFiles(requestToken: String): List<FileData>? {
-        val insiderFunction: Call<List<FileData>>? = api?.getInsideFiles(requestToken)
+    fun getInsideFiles(headers: HashMap<String,Any>, requestToken: String): List<FileData>? {
+        val insiderFunction: Call<List<FileData>>? = api?.getInsideFiles(headers, requestToken)
         val response: Response<List<FileData>>? = try {
             insiderFunction?.execute()
         } catch (e: Exception) {
@@ -85,8 +89,8 @@ object ServerManagement {
         return response?.body()
     }
 
-    fun upload(Param : HashMap<String,Any>, file: MultipartBody.Part) : String {
-        val uploading: Call<ResponseBody>? = api?.upload(Param, file)
+    fun upload(headers: HashMap<String,Any>, Param : HashMap<String,Any>, file: MultipartBody.Part) : String {
+        val uploading: Call<ResponseBody>? = api?.upload(headers, Param, file)
 
         Log.d("UPLOAD","$uploading")
         val response: Response<ResponseBody>? = try{
@@ -100,8 +104,8 @@ object ServerManagement {
         return response?.body()?.string() ?: ""
     }
 
-    fun download(token: String) {
-        val downloading : Call<ResponseBody> ?= api?.download(token)
+    fun download(headers: HashMap<String,Any>, token: String) {
+        val downloading : Call<ResponseBody> ?= api?.download(headers, token)
         val response: Response<ResponseBody>?=try{
             downloading?.execute()
         }catch (e: Exception){
@@ -160,7 +164,8 @@ object ServerManagement {
         return if (response.isSuccessful) {
             response.body()?.string()
         } else {
-            response.errorBody()?.string()
+            Log.d("ServerManagement.login", response.errorBody()?.string()!!)
+            "-1"
         } ?: ""
     }
 
